@@ -1,0 +1,529 @@
+/* =========================================
+   GAMENOTION — GLOBAL DESIGN SYSTEM
+   Production-Grade CSS Token System
+========================================= */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&family=Orbitron:wght@400;500;700;900&family=Rajdhani:wght@500;600;700&display=swap');
+
+/* ============================
+   DESIGN TOKENS
+============================ */
+:root {
+  /* Core Backgrounds — Translucent Glassmorphism */
+  --bg-root:        transparent;
+  --bg-base:        rgba(6, 6, 16, 0.22);
+  --bg-surface:     rgba(10, 10, 24, 0.32);
+  --bg-elevated:    rgba(16, 16, 38, 0.42);
+  --bg-card:        rgba(12, 12, 32, 0.45);
+  --bg-overlay:     rgba(4, 4, 9, 0.75);
+
+  /* Glassmorphism Blur */
+  --blur-glass:     blur(28px);
+
+  /* Borders — Transparent Glass Borders */
+  --border-subtle:  rgba(255, 255, 255, 0.04);
+  --border-default: rgba(255, 255, 255, 0.08);
+  --border-strong:  rgba(255, 255, 255, 0.15);
+  --border-focus:   rgba(0, 240, 255, 0.6);
+  --border-accent:  rgba(0, 240, 255, 0.25);
+
+  /* Text */
+  --text-primary:   #f5f5fa;
+  --text-secondary: rgba(245, 245, 250, 0.7);
+  --text-tertiary:  rgba(245, 245, 250, 0.46);
+  --text-disabled:  rgba(245, 245, 250, 0.28);
+  --text-link:      #a78bfa;
+
+  /* Brand — Violet → Cyan Cyberpunk Glow */
+  --brand-500:      #7c3aed;
+  --brand-400:      #9f67ff;
+  --brand-300:      #c084fc;
+  --brand-200:      #d8b4fe;
+  --brand-600:      #6d28d9;
+  --brand-glow:     rgba(0, 240, 255, 0.2);
+  --brand-dim:      rgba(124, 58, 237, 0.15);
+  --brand-gradient: linear-gradient(135deg, #7c3aed 0%, #00f0ff 100%);
+  --brand-gradient-soft: linear-gradient(135deg, rgba(124, 58, 237, 0.18) 0%, rgba(0, 240, 255, 0.12) 100%);
+
+  /* Semantic Colors — Cyberpunk Neon Theme */
+  --green:       #00e676;
+  --green-light: #69f0ae;
+  --green-dim:   rgba(0, 230, 118, 0.12);
+
+  --blue:        #00b0ff;
+  --blue-light:  #40c4ff;
+  --blue-dim:    rgba(0, 176, 255, 0.12);
+
+  --cyan:        #00e5ff;
+  --cyan-light:  #18ffff;
+  --cyan-dim:    rgba(0, 229, 255, 0.12);
+
+  --amber:       #ffd600;
+  --amber-light: #ffff00;
+  --amber-dim:   rgba(255, 214, 0, 0.12);
+
+  --red:         #ff1744;
+  --red-light:   #ff5252;
+  --red-dim:     rgba(255, 23, 68, 0.12);
+
+  --orange:      #ff6d00;
+  --orange-light:#ffab40;
+  --orange-dim:  rgba(255, 109, 0, 0.12);
+
+  /* Typography Scale */
+  --font-sans:   'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-display:'Space Grotesk', 'Inter', sans-serif;
+  --font-mono:   'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
+  --font-cyber:  'Orbitron', 'Rajdhani', 'Space Grotesk', sans-serif;
+
+  --text-xs:   11px;
+  --text-sm:   12px;
+  --text-base: 13.5px;
+  --text-md:   15px;
+  --text-lg:   17px;
+  --text-xl:   20px;
+  --text-2xl:  24px;
+  --text-3xl:  30px;
+  --text-4xl:  36px;
+  --text-5xl:  48px;
+
+  /* Spacing */
+  --space-1:  4px;
+  --space-2:  8px;
+  --space-3:  12px;
+  --space-4:  16px;
+  --space-5:  20px;
+  --space-6:  24px;
+  --space-8:  32px;
+  --space-10: 40px;
+  --space-12: 48px;
+  --space-16: 64px;
+
+  /* Border Radius */
+  --radius-sm:  5px;
+  --radius-md:  8px;
+  --radius-lg:  12px;
+  --radius-xl:  16px;
+  --radius-2xl: 20px;
+  --radius-full:9999px;
+
+  /* Shadows — Cyberpunk Neon Shadows */
+  --shadow-sm:  0 2px 8px rgba(0,0,0,0.5);
+  --shadow-md:  0 8px 32px 0 rgba(0, 0, 0, 0.37);
+  --shadow-lg:  0 12px 40px 0 rgba(0, 0, 0, 0.5);
+  --shadow-xl:  0 24px 80px rgba(0,0,0,0.7);
+  --shadow-glow:0 0 20px rgba(0, 240, 255, 0.15);
+  --shadow-card:0 0 0 1px rgba(255,255,255,0.05), 0 8px 32px 0 rgba(0,0,0,0.37);
+
+  /* Layout */
+  --sidebar-width:   256px;
+  --sidebar-collapsed:60px;
+  --topbar-height:   54px;
+  --content-max:     1400px;
+
+  /* Transitions */
+  --ease-default: cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-spring:  cubic-bezier(0.34, 1.56, 0.64, 1);
+  --ease-out:     cubic-bezier(0, 0, 0.2, 1);
+  --ease-in:      cubic-bezier(0.4, 0, 1, 1);
+  --duration-fast:   120ms;
+  --duration-base:   200ms;
+  --duration-slow:   350ms;
+  --duration-slower: 500ms;
+
+  /* Z-Index */
+  --z-base:     1;
+  --z-dropdown: 100;
+  --z-sidebar:  200;
+  --z-modal:    300;
+  --z-toast:    400;
+  --z-tooltip:  500;
+}
+
+/* ============================
+   RESET
+ ============================ */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 16px;
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+body {
+  font-family: var(--font-sans);
+  font-size: var(--text-base);
+  line-height: 1.6;
+  color: var(--text-primary);
+  background: radial-gradient(circle at 5% 5%, rgba(124, 58, 237, 0.12) 0%, transparent 45%), 
+              radial-gradient(circle at 95% 95%, rgba(0, 240, 255, 0.08) 0%, transparent 45%), 
+              radial-gradient(circle at 50% 50%, rgba(255, 0, 127, 0.03) 0%, transparent 50%), 
+              #030308;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow: hidden;
+  height: 100vh;
+  position: relative;
+}
+
+/* Repeating Cyber Grid Background Pattern */
+body::before {
+  content: '';
+  position: fixed; inset: 0;
+  background-size: 36px 36px;
+  background-image: 
+    linear-gradient(to right, rgba(124, 58, 237, 0.05) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(124, 58, 237, 0.05) 1px, transparent 1px);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Subtle CRT/Scanline Overlay */
+body::after {
+  content: '';
+  position: fixed; inset: 0;
+  background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.22) 50%), 
+              linear-gradient(90deg, rgba(255, 0, 127, 0.04), rgba(0, 240, 255, 0.02), rgba(0, 230, 118, 0.03));
+  background-size: 100% 4px, 6px 100%;
+  pointer-events: none;
+  z-index: 9999;
+  opacity: 0.12;
+}
+
+/* ============================
+   CYBERPUNK AMBIENT BACKDROP GLOWS
+============================ */
+.cyber-ambient-glow {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+}
+
+.ambient-blob {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(140px);
+  -webkit-filter: blur(140px);
+  pointer-events: none;
+  opacity: 0.15;
+  mix-blend-mode: screen;
+}
+
+.blob-1 {
+  top: -10%; left: 10%;
+  width: 450px; height: 450px;
+  background: var(--brand-500);
+  animation: float1 25s infinite alternate ease-in-out;
+}
+
+.blob-2 {
+  bottom: -10%; right: 5%;
+  width: 500px; height: 500px;
+  background: var(--cyan);
+  animation: float2 28s infinite alternate ease-in-out;
+}
+
+.blob-3 {
+  top: 40%; left: 55%;
+  width: 350px; height: 350px;
+  background: #ff007f; /* Cyber Pink */
+  animation: float3 22s infinite alternate ease-in-out;
+}
+
+@keyframes float1 {
+  0% { transform: translate(0, 0) scale(1); }
+  100% { transform: translate(50px, 80px) scale(1.15); }
+}
+@keyframes float2 {
+  0% { transform: translate(0, 0) scale(1); }
+  100% { transform: translate(-80px, -50px) scale(0.9); }
+}
+@keyframes float3 {
+  0% { transform: translate(0, 0) scale(1); }
+  100% { transform: translate(-40px, 60px) scale(1.1); }
+}
+
+#root {
+  height: 100vh;
+  display: flex;
+  overflow: hidden;
+}
+
+/* ============================
+   SCROLLBARS
+============================ */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255,255,255,0.08) transparent;
+}
+
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb {
+  background: rgba(255,255,255,0.08);
+  border-radius: var(--radius-full);
+}
+::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.15); }
+
+/* ============================
+   TYPOGRAPHY
+============================ */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-display);
+  font-weight: 700;
+  color: var(--text-primary);
+  line-height: 1.25;
+}
+
+p { color: var(--text-secondary); line-height: 1.7; }
+
+a {
+  color: var(--text-link);
+  text-decoration: none;
+}
+a:hover { text-decoration: underline; }
+
+code, pre, kbd {
+  font-family: var(--font-mono);
+}
+
+/* ============================
+   UTILITIES
+============================ */
+.sr-only {
+  position: absolute;
+  width: 1px; height: 1px;
+  padding: 0; margin: -1px;
+  overflow: hidden;
+  clip: rect(0,0,0,0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+.truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.text-gradient {
+  background: var(--brand-gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ============================
+   FOCUS STYLES (Accessibility)
+============================ */
+:focus-visible {
+  outline: 2px solid var(--brand-400);
+  outline-offset: 2px;
+  border-radius: var(--radius-sm);
+}
+
+button, [role="button"] {
+  cursor: pointer;
+  font-family: var(--font-sans);
+}
+
+input, select, textarea {
+  font-family: var(--font-sans);
+  color: var(--text-primary);
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-md);
+  padding: var(--space-2) var(--space-3);
+  font-size: var(--text-base);
+  outline: none;
+  transition: border-color var(--duration-base) var(--ease-default);
+  width: 100%;
+}
+
+input:focus, select:focus, textarea:focus {
+  border-color: var(--border-focus);
+  box-shadow: 0 0 0 3px rgba(124,58,237,0.12);
+}
+
+input::placeholder, textarea::placeholder {
+  color: var(--text-disabled);
+}
+
+select option {
+  background: var(--bg-elevated);
+  color: var(--text-primary);
+}
+
+textarea {
+  resize: vertical;
+  min-height: 88px;
+}
+
+/* ============================
+   TIPTAP EDITOR STYLES
+============================ */
+.ProseMirror {
+  outline: none;
+  min-height: 200px;
+  font-size: var(--text-base);
+  line-height: 1.75;
+  color: var(--text-secondary);
+}
+
+.ProseMirror > * + * {
+  margin-top: 0.75em;
+}
+
+.ProseMirror h1 { font-size: var(--text-4xl); font-weight: 800; color: var(--text-primary); }
+.ProseMirror h2 { font-size: var(--text-2xl); font-weight: 700; color: var(--text-primary); }
+.ProseMirror h3 { font-size: var(--text-xl); font-weight: 600; color: var(--text-primary); }
+
+.ProseMirror ul, .ProseMirror ol {
+  padding-left: 1.5em;
+}
+
+.ProseMirror li { margin-bottom: 0.25em; }
+
+.ProseMirror blockquote {
+  border-left: 3px solid var(--brand-500);
+  padding-left: 1em;
+  color: var(--text-tertiary);
+  font-style: italic;
+  background: var(--brand-dim);
+  border-radius: 0 var(--radius-md) var(--radius-md) 0;
+  padding: 0.75em 1em;
+}
+
+.ProseMirror code {
+  background: rgba(255,255,255,0.06);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  padding: 2px 6px;
+  font-size: 0.875em;
+  color: var(--cyan-light);
+}
+
+.ProseMirror pre {
+  background: #0a0a14;
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-md);
+  padding: 1em;
+  overflow-x: auto;
+}
+
+.ProseMirror pre code {
+  background: none;
+  border: none;
+  padding: 0;
+  color: #a5f3fc;
+}
+
+.ProseMirror mark {
+  background: rgba(251,191,36,0.25);
+  color: var(--amber-light);
+  border-radius: 2px;
+  padding: 0 2px;
+}
+
+.ProseMirror hr {
+  border: none;
+  border-top: 1px solid var(--border-default);
+  margin: 2em 0;
+}
+
+.ProseMirror table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 1em 0;
+}
+
+.ProseMirror th, .ProseMirror td {
+  border: 1px solid var(--border-default);
+  padding: 8px 12px;
+  text-align: left;
+}
+
+.ProseMirror th {
+  background: var(--bg-elevated);
+  font-weight: 600;
+  color: var(--text-primary);
+  font-size: var(--text-sm);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.ProseMirror .is-empty::before {
+  content: attr(data-placeholder);
+  float: left;
+  color: var(--text-disabled);
+  pointer-events: none;
+  height: 0;
+}
+
+/* Task list */
+.ProseMirror ul[data-type="taskList"] {
+  list-style: none;
+  padding-left: 0;
+}
+
+.ProseMirror li[data-type="taskItem"] {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.ProseMirror li[data-type="taskItem"] > label {
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.ProseMirror li[data-type="taskItem"] > div {
+  flex: 1;
+}
+
+.ProseMirror li[data-type="taskItem"][data-checked="true"] > div {
+  text-decoration: line-through;
+  color: var(--text-disabled);
+}
+
+/* ============================
+   GLASSMORPHISM & CYBERPUNK UTILITIES
+============================ */
+.glass {
+  background: var(--bg-base);
+  backdrop-filter: var(--blur-glass) saturate(180%);
+  -webkit-backdrop-filter: var(--blur-glass) saturate(180%);
+  border: 1px solid var(--border-default);
+  box-shadow: var(--shadow-md);
+}
+
+.glass-card {
+  background: rgba(15, 15, 30, 0.45);
+  backdrop-filter: var(--blur-glass) saturate(180%);
+  -webkit-backdrop-filter: var(--blur-glass) saturate(180%);
+  border: 1px solid var(--border-subtle);
+  box-shadow: var(--shadow-card);
+  transition: border-color var(--duration-base) var(--ease-default), box-shadow var(--duration-base) var(--ease-default);
+}
+.glass-card:hover {
+  border-color: var(--border-accent);
+  box-shadow: var(--shadow-glow);
+}
+
+.cyber-badge {
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+}

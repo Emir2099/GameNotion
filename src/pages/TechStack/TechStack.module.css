@@ -1,0 +1,51 @@
+.page { padding: 24px 28px 40px; min-height: 100%; }
+.hero {
+  position: relative;
+  height: 160px;
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+  margin-bottom: 24px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 20px 24px;
+  border: 1px solid var(--border-subtle);
+  box-shadow: var(--shadow-md);
+}
+.heroBg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: brightness(0.5) saturate(1.1);
+  transition: transform var(--duration-slow) var(--ease-spring);
+}
+.hero:hover .heroBg {
+  transform: scale(1.02);
+}
+.heroOverlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(4, 4, 8, 0.9) 0%, rgba(4, 4, 8, 0.2) 100%);
+  z-index: 1;
+}
+.heroContent {
+  position: relative;
+  z-index: 2;
+}
+.title { font-family: var(--font-display); font-size: var(--text-2xl); font-weight: 800; color: var(--text-primary); }
+.subtitle { font-size: var(--text-sm); color: var(--text-secondary); margin-top: 4px; }
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 14px; }
+.catCard { background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: var(--radius-lg); overflow: hidden; }
+.catHeader { display: flex; align-items: center; justify-content: space-between; padding: 14px 16px; border-bottom: 1px solid var(--border-subtle); border-left: 3px solid; }
+.catLabel { font-family: var(--font-display); font-size: var(--text-sm); font-weight: 700; color: var(--text-primary); }
+.catCount { font-size: 11px; background: var(--bg-elevated); border: 1px solid var(--border-subtle); border-radius: var(--radius-full); padding: 1px 8px; color: var(--text-disabled); }
+.items { padding: 8px; display: flex; flex-direction: column; gap: 3px; }
+.item { padding: 10px 12px; border-radius: var(--radius-md); transition: background var(--duration-base) var(--ease-default); }
+.item:hover { background: var(--bg-elevated); }
+.itemTop { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 3px; }
+.itemName { font-size: var(--text-sm); font-weight: 600; color: var(--text-primary); }
+.itemStatus { font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: var(--radius-full); border: 1px solid; white-space: nowrap; flex-shrink: 0; }
+.itemDesc { font-size: var(--text-xs); color: var(--text-tertiary); line-height: 1.5; margin-bottom: 3px; }
+.itemVer { font-family: var(--font-mono); font-size: 10px; color: var(--text-disabled); }
