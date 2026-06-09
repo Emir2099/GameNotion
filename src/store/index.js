@@ -464,6 +464,105 @@ export const useWorldStore = create(
   )
 );
 
+// ─── Tech Stack Store ────────────────────────────────────────────────────────
+const techDefaults = [
+  { category: '🎨 Rendering', color: '#7c3aed', items: [
+    { id: 't_nanite', name: 'Nanite', desc: 'Virtualized micropolygon geometry — all environment meshes', status: 'Active', version: 'UE5.4' },
+    { id: 't_lumen', name: 'Lumen', desc: 'Dynamic global illumination — all 6 zones, day/night cycle', status: 'Active', version: 'UE5.4' },
+    { id: 't_tsr', name: 'Temporal Super Resolution (TSR)', desc: 'Native 4K upscale from 1080p base render', status: 'Active', version: 'UE5.4' },
+    { id: 't_substrate', name: 'Substrate Materials', desc: 'Layered material framework replacing legacy material model', status: 'In Progress', version: 'UE5.4' },
+    { id: 't_pathtracing', name: 'Path Tracing', desc: 'Used for offline cinematics and marketing renders', status: 'Planned', version: 'UE5.4' },
+  ]},
+  { category: '⚙️ Gameplay Systems', color: '#2563eb', items: [
+    { id: 't_gas', name: 'Gameplay Ability System (GAS)', desc: 'All combat abilities, passive effects, attribute sets, gameplay tags', status: 'Active', version: '5.4' },
+    { id: 't_motionmatching', name: 'Motion Matching', desc: 'Locomotion system replacing traditional state machine — Kael only', status: 'Active', version: '5.4' },
+    { id: 't_statetree', name: 'State Tree', desc: 'AI decision system for all enemy archetypes', status: 'In Progress', version: '5.4' },
+    { id: 't_chaos', name: 'Chaos Physics', desc: 'Destruction in The Iron Depths, avalanche sim in Arctic Spire', status: 'Planned', version: '5.4' },
+  ]},
+  { category: '🌍 World & Environment', color: '#0891b2', items: [
+    { id: 't_worldpartition', name: 'World Partition', desc: 'Seamless 64km² open world streaming — no loading screens', status: 'Active', version: '5.4' },
+    { id: 't_pcg', name: 'PCG (Procedural Content Generation)', desc: 'Desert terrain erosion, foliage scatter, interior prop variation', status: 'In Progress', version: '5.4' },
+    { id: 't_water', name: 'Water System Plugin', desc: 'Rivers, ocean, and interaction physics — Neon Delta zone', status: 'Planned', version: '5.4' },
+    { id: 't_metahuman', name: 'MetaHuman', desc: 'Kael Voss and Commander Vex hero characters', status: 'In Progress', version: '5.4' },
+  ]},
+  { category: '🔊 Audio', color: '#059669', items: [
+    { id: 't_metasounds', name: 'MetaSounds', desc: 'Full adaptive audio system — parameter-driven music, SFX procedural variation', status: 'Active', version: '5.4' },
+    { id: 't_convolution', name: 'Convolution Reverb', desc: 'Real-time IR-based reverb for acoustic zones', status: 'Active', version: '5.4' },
+    { id: 't_wwise', name: 'Wwise Integration', desc: 'Secondary audio engine for complex adaptive music sequences', status: 'Planned', version: '2024.1' },
+  ]},
+  { category: '🔌 Plugins', color: '#d97706', items: [
+    { id: 't_enhancedinput', name: 'Enhanced Input', desc: 'Full input remapping, gamepad + KB/M, accessibility modes', status: 'Active', version: 'Built-in' },
+    { id: 't_commonui', name: 'Common UI', desc: 'Cross-platform UI layer — console navigation, focus management', status: 'Active', version: 'Built-in' },
+    { id: 't_mover', name: 'Mover 2.0', desc: 'New character movement framework replacing CharacterMovementComponent', status: 'Evaluating', version: '5.4 Exp' },
+    { id: 't_steam', name: 'Online Subsystem Steam', desc: 'Steam achievements, cloud saves, leaderboards', status: 'Planned', version: '—' },
+  ]},
+  { category: '🚀 Optimization', color: '#dc2626', items: [
+    { id: 't_scalability', name: 'Platform Scalability', desc: 'Quality presets: Cinematic / Epic / High / Medium / Low', status: 'In Progress', version: '—' },
+    { id: 't_insights', name: 'Insight Profiling', desc: 'Unreal Insights integrated into CI pipeline', status: 'Active', version: '5.4' },
+    { id: 't_pso', name: 'PSO Caching', desc: 'Pipeline State Object pre-compilation for PS5 / Xbox', status: 'Planned', version: '—' },
+  ]},
+];
+
+export const useTechStore = create(
+  persist(
+    (set) => ({
+      categories: techDefaults,
+      projectsData: {},
+
+      addTechItem: (categoryLabel, item) => set((s) => {
+        const updatedCategories = s.categories.map(cat => {
+          if (cat.category === categoryLabel) {
+            return {
+              ...cat,
+              items: [...cat.items, { ...item, id: 'tech_' + Date.now() }]
+            };
+          }
+          return cat;
+        });
+        return { categories: updatedCategories };
+      }),
+
+      updateTechItem: (categoryLabel, itemId, updates) => set((s) => {
+        const updatedCategories = s.categories.map(cat => {
+          if (cat.category === categoryLabel) {
+            return {
+              ...cat,
+              items: cat.items.map(item => item.id === itemId ? { ...item, ...updates } : item)
+            };
+          }
+          return cat;
+        });
+        return { categories: updatedCategories };
+      }),
+
+      deleteTechItem: (categoryLabel, itemId) => set((s) => {
+        const updatedCategories = s.categories.map(cat => {
+          if (cat.category === categoryLabel) {
+            return {
+              ...cat,
+              items: cat.items.filter(item => item.id !== itemId)
+            };
+          }
+          return cat;
+        });
+        return { categories: updatedCategories };
+      }),
+
+      switchProject: (fromId, toId) => set((s) => {
+        if (!fromId || !toId || fromId === toId) return {};
+        const projectsData = { ...s.projectsData };
+        projectsData[fromId] = { categories: s.categories };
+        const target = projectsData[toId] || { categories: techDefaults };
+        return {
+          projectsData,
+          categories: target.categories,
+        };
+      }),
+    }),
+    { name: 'gamenotion-tech' }
+  )
+);
+
 // ─── Setup Store Subscriptions ───────────────────────────────────────────────
 let previousProjectId = useAppStore.getState().activeProjectId || 'p_nexus';
 
@@ -483,5 +582,6 @@ useAppStore.subscribe((state) => {
     useTeamStore.getState().switchProject(fromId, toId);
     useGDDStore.getState().switchProject(fromId, toId);
     useWorldStore.getState().switchProject(fromId, toId);
+    useTechStore.getState().switchProject(fromId, toId);
   }
 });

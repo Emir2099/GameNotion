@@ -33,6 +33,14 @@
 .heroContent {
   position: relative;
   z-index: 2;
+  width: 100%;
+}
+.heroHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
 }
 .title { font-family: var(--font-cyber); font-size: var(--text-2xl); font-weight: 800; color: var(--text-primary); letter-spacing: 0.05em; text-transform: uppercase; }
 .subtitle { font-size: var(--text-sm); color: var(--text-secondary); margin-top: 4px; }
@@ -42,10 +50,53 @@
 .catLabel { font-family: var(--font-cyber); font-size: var(--text-sm); font-weight: 700; color: var(--text-primary); letter-spacing: 0.05em; }
 .catCount { font-size: 11px; background: var(--bg-elevated); border: 1px solid var(--border-subtle); border-radius: var(--radius-full); padding: 1px 8px; color: var(--text-disabled); }
 .items { padding: 8px; display: flex; flex-direction: column; gap: 3px; }
-.item { padding: 10px 12px; border-radius: var(--radius-md); transition: background var(--duration-base) var(--ease-default); }
+.item {
+  position: relative;
+  padding: 10px 12px;
+  border-radius: var(--radius-md);
+  transition: background var(--duration-base) var(--ease-default);
+}
 .item:hover { background: var(--bg-elevated); }
 .itemTop { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 3px; }
 .itemName { font-size: var(--text-sm); font-weight: 600; color: var(--text-primary); }
 .itemStatus { font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: var(--radius-full); border: 1px solid; white-space: nowrap; flex-shrink: 0; }
 .itemDesc { font-size: var(--text-xs); color: var(--text-tertiary); line-height: 1.5; margin-bottom: 3px; }
+.itemBottom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 4px;
+}
 .itemVer { font-family: var(--font-mono); font-size: 10px; color: var(--text-disabled); }
+.cardActions {
+  display: flex;
+  gap: 4px;
+  opacity: 0;
+  transition: opacity var(--duration-base) var(--ease-default);
+}
+.item:hover .cardActions {
+  opacity: 1;
+}
+.actionBtn {
+  width: 22px;
+  height: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  color: var(--text-disabled);
+  cursor: pointer;
+  transition: all var(--duration-fast) var(--ease-default);
+}
+.actionBtn:hover {
+  background: var(--bg-card);
+  color: var(--text-primary);
+  border-color: var(--border-strong);
+}
+.deleteBtn:hover {
+  background: var(--red-dim);
+  color: var(--red-light);
+  border-color: rgba(220, 38, 38, 0.4);
+}
