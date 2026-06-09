@@ -248,6 +248,23 @@ export function OnboardingWizard() {
 
   const prev = () => setStep(s => s - 1);
 
+  const handleCancel = () => {
+    const state = useAppStore.getState();
+    const projects = state.projects || [];
+    if (projects.length > 0) {
+      const lastProj = projects[projects.length - 1];
+      useAppStore.setState({
+        onboardingDone: true,
+        projectName: lastProj.projectName,
+        projectGenre: lastProj.projectGenre,
+        projectEngine: lastProj.projectEngine,
+        projectPhase: lastProj.projectPhase,
+      });
+    } else {
+      useAppStore.setState({ onboardingDone: true });
+    }
+  };
+
   const activeEngineKey = hoveredEngine || selectedBaseEngine;
   const activeWatermark = WATERMARKS[activeEngineKey] || null;
 
@@ -544,9 +561,12 @@ export function OnboardingWizard() {
 
         {/* Footer */}
         <div className={styles.footer}>
-          {step > 0 ? (
-            <Button variant="ghost" icon={ChevronLeft} onClick={prev}>Back</Button>
-          ) : <div />}
+          <div className={styles.footerLeft}>
+            {step > 0 && (
+              <Button variant="ghost" icon={ChevronLeft} onClick={prev}>Back</Button>
+            )}
+            <Button variant="ghost" onClick={handleCancel}>Cancel</Button>
+          </div>
           <Button
             variant={step === STEPS.length - 1 ? 'gradient' : 'primary'}
             iconRight={step < STEPS.length - 1 ? ChevronRight : undefined}
