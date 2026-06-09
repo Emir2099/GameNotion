@@ -5,18 +5,28 @@
 
 .levels { display: flex; flex-direction: column; gap: 8px; }
 .levelCard {
-  background: rgba(10, 10, 24, 0.45);
-  backdrop-filter: var(--blur-glass) saturate(180%);
-  -webkit-backdrop-filter: var(--blur-glass) saturate(180%);
-  border: 1px solid rgba(255, 255, 255, 0.04);
+  /* Frosted glass level card */
+  background: rgba(255, 255, 255, 0.06);
+  backdrop-filter: blur(48px) saturate(220%);
+  -webkit-backdrop-filter: blur(48px) saturate(220%);
+  border: 1px solid rgba(255, 255, 255, 0.12);
   border-radius: var(--radius-lg); padding: 16px 20px;
   display: flex; align-items: center; gap: 16px;
   cursor: pointer; transition: all var(--duration-base) var(--ease-default);
+  position: relative;
+  box-shadow:
+    0 4px 16px rgba(0,0,0,0.4),
+    inset 0 1px 0 rgba(255,255,255,0.16),
+    inset 0 -1px 0 rgba(0,0,0,0.12);
 }
 .levelCard:hover {
-  border-color: rgba(0, 240, 255, 0.35);
-  box-shadow: 0 12px 30px rgba(0,0,0,0.5), 0 0 15px rgba(0, 240, 255, 0.15);
-  transform: translateX(3px);
+  border-color: rgba(0, 240, 255, 0.3);
+  box-shadow:
+    0 14px 36px rgba(0,0,0,0.5),
+    0 0 20px rgba(0, 240, 255, 0.14),
+    inset 0 1px 0 rgba(255,255,255,0.22),
+    inset 0 -1px 0 rgba(0,0,0,0.15);
+  transform: translateX(4px);
 }
 
 .levelNum {

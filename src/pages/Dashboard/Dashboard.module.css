@@ -64,17 +64,21 @@
 }
 
 .statCard {
-  background: rgba(10, 10, 24, 0.45);
-  backdrop-filter: var(--blur-glass) saturate(180%);
-  -webkit-backdrop-filter: var(--blur-glass) saturate(180%);
-  border: 1px solid rgba(255, 255, 255, 0.04);
+  /* Frosted glass card — white tint lets blob colors show through */
+  background: rgba(255, 255, 255, 0.06);
+  backdrop-filter: blur(48px) saturate(220%);
+  -webkit-backdrop-filter: blur(48px) saturate(220%);
+  border: 1px solid rgba(255, 255, 255, 0.12);
   border-radius: 12px;
   padding: 20px;
   cursor: pointer;
   transition: all var(--duration-base) var(--ease-default);
   position: relative;
   overflow: hidden;
-  box-shadow: var(--shadow-sm), inset 0 0 12px rgba(255, 255, 255, 0.02);
+  box-shadow:
+    0 4px 16px rgba(0, 0, 0, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.16),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.15);
 }
 .statCard::after {
   content: '';
@@ -83,10 +87,21 @@
   opacity: 0.8;
   filter: blur(0.5px);
 }
+/* Top-edge refraction highlight */
+.statCard::before {
+  content: '';
+  position: absolute; top: 0; left: 12px; right: 12px; height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2) 30%, rgba(255,255,255,0.32) 50%, rgba(255,255,255,0.2) 70%, transparent);
+  pointer-events: none; z-index: 1;
+}
 .statCard:hover {
-  border-color: var(--card-color);
-  transform: translateY(-2px);
-  box-shadow: 0 16px 40px rgba(0,0,0,0.6), 0 0 16px rgba(124, 58, 237, 0.1);
+  border-color: rgba(255, 255, 255, 0.22);
+  transform: translateY(-3px);
+  box-shadow:
+    0 16px 40px rgba(0,0,0,0.55),
+    0 0 20px rgba(124, 58, 237, 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.22),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.2);
 }
 
 .statHeader {
@@ -133,17 +148,33 @@
 }
 
 .card {
-  background: rgba(20, 20, 45, 0.35);
-  backdrop-filter: var(--blur-glass) saturate(180%);
-  -webkit-backdrop-filter: var(--blur-glass) saturate(180%);
-  border: 1px solid var(--border-subtle);
+  /* Frosted glass content card */
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(48px) saturate(220%);
+  -webkit-backdrop-filter: blur(48px) saturate(220%);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: var(--radius-lg);
   padding: 18px;
+  position: relative;
   transition: border-color var(--duration-base) var(--ease-default), box-shadow var(--duration-base) var(--ease-default);
+  box-shadow:
+    0 8px 32px rgba(0,0,0,0.4),
+    inset 0 1px 0 rgba(255,255,255,0.14),
+    inset 0 -1px 0 rgba(0,0,0,0.12);
+}
+.card::before {
+  content: '';
+  position: absolute; top: 0; left: 12px; right: 12px; height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.18) 30%, rgba(255,255,255,0.28) 50%, rgba(255,255,255,0.18) 70%, transparent);
+  pointer-events: none; z-index: 1;
 }
 .card:hover {
-  border-color: var(--border-accent);
-  box-shadow: var(--shadow-glow);
+  border-color: rgba(255, 255, 255, 0.18);
+  box-shadow:
+    0 12px 40px rgba(0,0,0,0.5),
+    0 0 28px rgba(0, 240, 255, 0.1),
+    inset 0 1px 0 rgba(255,255,255,0.2),
+    inset 0 -1px 0 rgba(0,0,0,0.15);
 }
 
 .cardHead {
