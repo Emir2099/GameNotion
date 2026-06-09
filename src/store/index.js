@@ -6,7 +6,8 @@ import { persist } from 'zustand/middleware';
 // ─── App / UI Store ──────────────────────────────────────────────────────────
 export const useAppStore = create(
   persist(
-    (set, get) => ({
+    (set) => ({
+      activeProjectId: 'p_nexus',
       projectName: 'Project NEXUS',
       projectGenre: 'Open-World Action RPG',
       projectEngine: 'Unreal Engine 5.4',
@@ -19,16 +20,29 @@ export const useAppStore = create(
         { id: 'p_nexus', projectName: 'Project NEXUS', projectGenre: 'Open-World Action RPG', projectEngine: 'Unreal Engine 5.4', projectPhase: 'Alpha' }
       ],
 
-      setProjectName: (name) => set({ projectName: name }),
-      setProjectGenre: (g) => set({ projectGenre: g }),
-      setProjectEngine: (e) => set({ projectEngine: e }),
-      setProjectPhase: (p) => set({ projectPhase: p }),
+      setProjectName: (name) => set((s) => {
+        const updatedProjects = (s.projects || []).map(p => p.id === s.activeProjectId ? { ...p, projectName: name } : p);
+        return { projectName: name, projects: updatedProjects };
+      }),
+      setProjectGenre: (g) => set((s) => {
+        const updatedProjects = (s.projects || []).map(p => p.id === s.activeProjectId ? { ...p, projectGenre: g } : p);
+        return { projectGenre: g, projects: updatedProjects };
+      }),
+      setProjectEngine: (e) => set((s) => {
+        const updatedProjects = (s.projects || []).map(p => p.id === s.activeProjectId ? { ...p, projectEngine: e } : p);
+        return { projectEngine: e, projects: updatedProjects };
+      }),
+      setProjectPhase: (p) => set((s) => {
+        const updatedProjects = (s.projects || []).map(p => p.id === s.activeProjectId ? { ...p, projectPhase: p } : p);
+        return { projectPhase: p, projects: updatedProjects };
+      }),
       toggleSidebar: () => set((s) => ({ sidebarCollapsed: !s.sidebarCollapsed })),
       switchProject: (id) => set((s) => {
         const list = s.projects || [];
         const target = list.find(p => p.id === id);
         if (target) {
           return {
+            activeProjectId: target.id,
             projectName: target.projectName,
             projectGenre: target.projectGenre,
             projectEngine: target.projectEngine,
@@ -38,7 +52,9 @@ export const useAppStore = create(
         return {};
       }),
       completeOnboarding: (data) => set((s) => {
-        const newProj = { ...data, id: 'p_' + Date.now() };
+        const existingProj = (s.projects || []).find(p => p.projectName === data.projectName);
+        const activeId = existingProj ? existingProj.id : 'p_' + Date.now();
+        const newProj = { ...data, id: activeId };
         const currentList = s.projects || [];
         const exists = currentList.some(p => p.projectName === data.projectName);
         const updatedList = exists 
@@ -46,6 +62,7 @@ export const useAppStore = create(
           : [...currentList, newProj];
         return {
           onboardingDone: true,
+          activeProjectId: activeId,
           projects: updatedList,
           ...data,
         };
@@ -79,12 +96,39 @@ export const useTaskStore = create(
       sprintGoal: 'Core combat loop playable end-to-end on PC and PS5',
       sprintStart: '2026-06-01',
       sprintEnd: '2026-06-21',
+      projectsData: {},
 
       addTask: (task) => set((s) => ({ tasks: [{ ...task, id: 't' + Date.now(), createdAt: new Date().toISOString() }, ...s.tasks] })),
       updateTask: (id, updates) => set((s) => ({ tasks: s.tasks.map((t) => t.id === id ? { ...t, ...updates } : t) })),
       deleteTask: (id) => set((s) => ({ tasks: s.tasks.filter((t) => t.id !== id) })),
       moveTask: (id, column) => set((s) => ({ tasks: s.tasks.map((t) => t.id === id ? { ...t, column } : t) })),
       updateSprint: (data) => set(data),
+      switchProject: (fromId, toId) => set((s) => {
+        if (!fromId || !toId || fromId === toId) return {};
+        const projectsData = { ...s.projectsData };
+        projectsData[fromId] = {
+          tasks: s.tasks,
+          sprintName: s.sprintName,
+          sprintGoal: s.sprintGoal,
+          sprintStart: s.sprintStart,
+          sprintEnd: s.sprintEnd,
+        };
+        const target = projectsData[toId] || {
+          tasks: [],
+          sprintName: 'Sprint 1',
+          sprintGoal: 'Define core gameplay loop',
+          sprintStart: new Date().toISOString().split('T')[0],
+          sprintEnd: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+        };
+        return {
+          projectsData,
+          tasks: target.tasks,
+          sprintName: target.sprintName,
+          sprintGoal: target.sprintGoal,
+          sprintStart: target.sprintStart,
+          sprintEnd: target.sprintEnd,
+        };
+      }),
       getTasksByColumn: (col) => get().tasks.filter((t) => t.column === col),
       getStats: () => {
         const tasks = get().tasks;
@@ -115,11 +159,23 @@ const assetDefaults = [
 
 export const useAssetStore = create(
   persist(
-    (set, get) => ({
+    (set) => ({
       assets: assetDefaults,
+      projectsData: {},
+
       addAsset: (asset) => set((s) => ({ assets: [{ ...asset, id: 'a' + Date.now(), updatedAt: new Date().toISOString() }, ...s.assets] })),
       updateAsset: (id, updates) => set((s) => ({ assets: s.assets.map((a) => a.id === id ? { ...a, ...updates, updatedAt: new Date().toISOString() } : a) })),
       deleteAsset: (id) => set((s) => ({ assets: s.assets.filter((a) => a.id !== id) })),
+      switchProject: (fromId, toId) => set((s) => {
+        if (!fromId || !toId || fromId === toId) return {};
+        const projectsData = { ...s.projectsData };
+        projectsData[fromId] = { assets: s.assets };
+        const target = projectsData[toId] || { assets: [] };
+        return {
+          projectsData,
+          assets: target.assets,
+        };
+      }),
     }),
     { name: 'gamenotion-assets' }
   )
@@ -141,9 +197,21 @@ export const useBugStore = create(
   persist(
     (set, get) => ({
       bugs: bugDefaults,
+      projectsData: {},
+
       addBug: (bug) => set((s) => ({ bugs: [{ ...bug, id: 'B-' + String(Date.now()).slice(-3), reportedAt: new Date().toISOString() }, ...s.bugs] })),
       updateBug: (id, updates) => set((s) => ({ bugs: s.bugs.map((b) => b.id === id ? { ...b, ...updates } : b) })),
       deleteBug: (id) => set((s) => ({ bugs: s.bugs.filter((b) => b.id !== id) })),
+      switchProject: (fromId, toId) => set((s) => {
+        if (!fromId || !toId || fromId === toId) return {};
+        const projectsData = { ...s.projectsData };
+        projectsData[fromId] = { bugs: s.bugs };
+        const target = projectsData[toId] || { bugs: [] };
+        return {
+          projectsData,
+          bugs: target.bugs,
+        };
+      }),
       getCounts: () => {
         const bugs = get().bugs;
         return {
@@ -163,7 +231,7 @@ export const useBugStore = create(
 const characterDefaults = [
   { id: 'c1', name: 'Kael Voss', role: 'Protagonist', archetype: 'Enforcer / Hacker', status: 'In Progress', description: 'Disgraced NEXUS Enforcer with a corrupted neural implant carrying ARIA\'s final transmission. Cold, tactical, morally grey. Former Iron Veil elite operative.', personality: 'Stoic, analytical, haunted by past actions. Dry sardonic humor emerges under pressure.', abilities: ['Neural Hack', 'Blink Dash', 'Memory Read', 'Combat Interface'], voiceActor: 'TBD', model: 'MetaHuman — WIP', factionAffinity: 'Neutral', avatar: '/avatars/kael.png', color: '#7c3aed' },
   { id: 'c2', name: 'ARIA', role: 'AI Companion', archetype: 'Oracle / Mentor', status: 'Concept', description: 'The dying NEXUS Central AI, communicating through Kael\'s implant. Ancient intelligence fragments form her personality — vast knowledge, corrupted memory.', personality: 'Methodical, curious about humanity, cryptic. Shows rare warmth. Memory gaps cause unpredictable behavior.', abilities: ['Environmental Analysis', 'NEXUS Access', 'Probability Forecasting'], voiceActor: 'TBD', model: 'No model — audio only', factionAffinity: 'NEXUS', avatar: '/avatars/aria.png', color: '#06b6d4' },
-  { id: 'c3', name: 'Commander Vex', role: 'Main Antagonist', archetype: 'Authoritarian / Idealist', status: 'In Progress', description: 'Iron Veil supreme commander. Seized NEXUS military during the First Fracture War. Believes absolute control is the only path to human survival.', personality: 'Charismatic, methodical, utterly ruthless. Genuinely believes he is saving humanity.', abilities: ['Iron Veil Forces', 'NEXUS Military Network', 'Strategic Genius'], voiceActor: 'TBD', model: 'MetaHuman — Concept phase', factionAffinity: 'Iron Veil', avatar: '/avatars/vex.png', color: '#dc2626' },
+  { id: 'c3', name: 'Commander Vex', role: 'Main Antagonist', archetype: 'Authoritarian / Idealist', status: 'In Progress', description: 'Iron Veil supreme commander. Seized NEXUS military during the First Fracture War of 2330. Believes absolute control is the only path to human survival.', personality: 'Charismatic, methodical, utterly ruthless. Genuinely believes he is saving humanity.', abilities: ['Iron Veil Forces', 'NEXUS Military Network', 'Strategic Genius'], voiceActor: 'TBD', model: 'MetaHuman — Concept phase', factionAffinity: 'Iron Veil', avatar: '/avatars/vex.png', color: '#dc2626' },
   { id: 'c4', name: 'Sil', role: 'Companion', archetype: 'Shadow Operative', status: 'In Progress', description: 'Ghost-tier Free Collective operative who allies with Kael after discovering mutual enemies. Shadow class archetype. Expert infiltrator.', personality: 'Sarcastic, hyper-competent, deeply loyal once trust is earned. Allergic to sentimentality.', abilities: ['Stealth System', 'Hacking', 'Blade Mastery', 'Grapple Hook'], voiceActor: 'TBD', model: 'MetaHuman — Block', factionAffinity: 'Free Collective', avatar: '/avatars/sil.png', color: '#059669' },
 ];
 
@@ -171,9 +239,21 @@ export const useCharacterStore = create(
   persist(
     (set) => ({
       characters: characterDefaults,
+      projectsData: {},
+
       addCharacter: (ch) => set((s) => ({ characters: [...s.characters, { ...ch, id: 'c' + Date.now() }] })),
       updateCharacter: (id, updates) => set((s) => ({ characters: s.characters.map((c) => c.id === id ? { ...c, ...updates } : c) })),
       deleteCharacter: (id) => set((s) => ({ characters: s.characters.filter((c) => c.id !== id) })),
+      switchProject: (fromId, toId) => set((s) => {
+        if (!fromId || !toId || fromId === toId) return {};
+        const projectsData = { ...s.projectsData };
+        projectsData[fromId] = { characters: s.characters };
+        const target = projectsData[toId] || { characters: [] };
+        return {
+          projectsData,
+          characters: target.characters,
+        };
+      }),
     }),
     { name: 'gamenotion-characters' }
   )
@@ -193,9 +273,21 @@ export const useLevelStore = create(
   persist(
     (set) => ({
       levels: levelDefaults,
+      projectsData: {},
+
       addLevel: (lv) => set((s) => ({ levels: [...s.levels, { ...lv, id: 'l' + Date.now() }] })),
       updateLevel: (id, updates) => set((s) => ({ levels: s.levels.map((l) => l.id === id ? { ...l, ...updates } : l) })),
       deleteLevel: (id) => set((s) => ({ levels: s.levels.filter((l) => l.id !== id) })),
+      switchProject: (fromId, toId) => set((s) => {
+        if (!fromId || !toId || fromId === toId) return {};
+        const projectsData = { ...s.projectsData };
+        projectsData[fromId] = { levels: s.levels };
+        const target = projectsData[toId] || { levels: [] };
+        return {
+          projectsData,
+          levels: target.levels,
+        };
+      }),
     }),
     { name: 'gamenotion-levels' }
   )
@@ -217,9 +309,21 @@ export const useTeamStore = create(
   persist(
     (set) => ({
       members: teamDefaults,
+      projectsData: {},
+
       addMember: (m) => set((s) => ({ members: [...s.members, { ...m, id: 'tm' + Date.now() }] })),
       updateMember: (id, updates) => set((s) => ({ members: s.members.map((m) => m.id === id ? { ...m, ...updates } : m) })),
       deleteMember: (id) => set((s) => ({ members: s.members.filter((m) => m.id !== id) })),
+      switchProject: (fromId, toId) => set((s) => {
+        if (!fromId || !toId || fromId === toId) return {};
+        const projectsData = { ...s.projectsData };
+        projectsData[fromId] = { members: s.members };
+        const target = projectsData[toId] || { members: teamDefaults };
+        return {
+          projectsData,
+          members: target.members,
+        };
+      }),
     }),
     { name: 'gamenotion-team' }
   )
@@ -243,8 +347,26 @@ export const useGDDStore = create(
     (set) => ({
       sections: defaultGDDContent,
       lastSaved: null,
-      updateSection: (key, html) => set({ sections: { ...defaultGDDContent }, lastSaved: new Date().toISOString() }),
+      projectsData: {},
+
+      updateSection: () => set({ sections: { ...defaultGDDContent }, lastSaved: new Date().toISOString() }),
       updateSectionContent: (key, html) => set((s) => ({ sections: { ...s.sections, [key]: html }, lastSaved: new Date().toISOString() })),
+      switchProject: (fromId, toId) => set((s) => {
+        if (!fromId || !toId || fromId === toId) return {};
+        const projectsData = { ...s.projectsData };
+        projectsData[fromId] = { sections: s.sections };
+        const target = projectsData[toId] || {
+          sections: {
+            overview: `<h1>New Project — Game Design Document</h1><p>Start writing your design document here...</p>`,
+            pillars: `<h2>Design Pillars</h2><p>Define your design pillars...</p>`,
+            mechanics: `<h2>Core Mechanics</h2><p>Define your core mechanics...</p>`,
+          }
+        };
+        return {
+          projectsData,
+          sections: target.sections,
+        };
+      }),
     }),
     { name: 'gamenotion-gdd' }
   )
@@ -261,10 +383,44 @@ export const useWorldStore = create(
   persist(
     (set) => ({
       entries: worldDefaults,
+      projectsData: {},
+
       addEntry: (e) => set((s) => ({ entries: [...s.entries, { ...e, id: 'w' + Date.now() }] })),
       updateEntry: (id, updates) => set((s) => ({ entries: s.entries.map((e) => e.id === id ? { ...e, ...updates } : e) })),
       deleteEntry: (id) => set((s) => ({ entries: s.entries.filter((e) => e.id !== id) })),
+      switchProject: (fromId, toId) => set((s) => {
+        if (!fromId || !toId || fromId === toId) return {};
+        const projectsData = { ...s.projectsData };
+        projectsData[fromId] = { entries: s.entries };
+        const target = projectsData[toId] || { entries: [] };
+        return {
+          projectsData,
+          entries: target.entries,
+        };
+      }),
     }),
     { name: 'gamenotion-world' }
   )
 );
+
+// ─── Setup Store Subscriptions ───────────────────────────────────────────────
+let previousProjectId = useAppStore.getState().activeProjectId || 'p_nexus';
+
+useAppStore.subscribe((state) => {
+  const currentProjectId = state.activeProjectId;
+  if (currentProjectId && currentProjectId !== previousProjectId) {
+    const fromId = previousProjectId;
+    const toId = currentProjectId;
+    
+    previousProjectId = currentProjectId;
+
+    useTaskStore.getState().switchProject(fromId, toId);
+    useAssetStore.getState().switchProject(fromId, toId);
+    useBugStore.getState().switchProject(fromId, toId);
+    useCharacterStore.getState().switchProject(fromId, toId);
+    useLevelStore.getState().switchProject(fromId, toId);
+    useTeamStore.getState().switchProject(fromId, toId);
+    useGDDStore.getState().switchProject(fromId, toId);
+    useWorldStore.getState().switchProject(fromId, toId);
+  }
+});
