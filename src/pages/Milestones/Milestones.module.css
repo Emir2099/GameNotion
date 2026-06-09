@@ -1,7 +1,36 @@
 .page { padding: 24px 28px 40px; min-height: 100%; }
-.header { margin-bottom: 28px; }
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 28px;
+  flex-wrap: wrap;
+}
 .title { font-family: var(--font-cyber); font-size: var(--text-2xl); font-weight: 800; color: var(--text-primary); letter-spacing: 0.05em; text-transform: uppercase; }
 .subtitle { font-size: var(--text-sm); color: var(--text-secondary); margin-top: 4px; }
+.headerControls {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+.projectPhaseSelector {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.selectorLabel {
+  font-size: var(--text-xs);
+  font-weight: 600;
+  color: var(--text-disabled);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  white-space: nowrap;
+}
+.phaseSelect {
+  min-width: 140px;
+}
 
 .timeline { display: flex; flex-direction: column; max-width: 800px; }
 
@@ -59,11 +88,51 @@
   color: var(--text-disabled); margin-top: 3px;
 }
 
+.milestoneMeta {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
 .milestoneStatus {
   font-size: 11px; font-weight: 700;
   padding: 3px 10px; border-radius: var(--radius-full);
   border: 1px solid; white-space: nowrap; flex-shrink: 0;
   letter-spacing: 0.04em;
+}
+
+.cardActions {
+  display: flex;
+  gap: 4px;
+  opacity: 0;
+  transition: opacity var(--duration-base) var(--ease-default);
+}
+.milestoneCard:hover .cardActions {
+  opacity: 1;
+}
+
+.actionBtn {
+  width: 22px;
+  height: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  color: var(--text-disabled);
+  cursor: pointer;
+  transition: all var(--duration-fast) var(--ease-default);
+}
+.actionBtn:hover {
+  background: var(--bg-card);
+  color: var(--text-primary);
+  border-color: var(--border-strong);
+}
+.deleteBtn:hover {
+  background: var(--red-dim);
+  color: var(--red-light);
+  border-color: rgba(220, 38, 38, 0.4);
 }
 
 .deliverables { list-style: none; display: flex; flex-direction: column; gap: 6px; }
@@ -74,4 +143,14 @@
 .deliverableDot {
   width: 6px; height: 6px; border-radius: 50%;
   margin-top: 5px; flex-shrink: 0;
+}
+
+.empty {
+  padding: 40px;
+  text-align: center;
+  background: var(--bg-card);
+  border: 1px dashed var(--border-subtle);
+  border-radius: var(--radius-lg);
+  color: var(--text-disabled);
+  font-size: var(--text-sm);
 }

@@ -67,6 +67,13 @@ export const useAppStore = create(
           ...data,
         };
       }),
+      updateActiveProject: (updates) => set((s) => {
+        const updatedProjects = (s.projects || []).map(p => p.id === s.activeProjectId ? { ...p, ...updates } : p);
+        return {
+          ...updates,
+          projects: updatedProjects,
+        };
+      }),
       openHelp: (page) => set({ helpPanelPage: page }),
       closeHelp: () => set({ helpPanelPage: null }),
     }),
@@ -563,16 +570,55 @@ export const useTechStore = create(
   )
 );
 
+// ─── Milestone Store ─────────────────────────────────────────────────────────
+const milestoneDefaults = [
+  { id: 'm1', name: 'Pre-Production', date: 'Jan 2026', status: 'done', color: '#059669', deliverables: ['Engine version locked (UE5.4)','Core team assembled (8 members)','GDD v1.0 complete','Target platforms confirmed: PC, PS5, Xbox S|X','Art Bible approved','Vertical slice defined'] },
+  { id: 'm2', name: 'Vertical Slice', date: 'Mar 2026', status: 'done', color: '#059669', deliverables: ['1km² playable area of Zone 1','Core combat loop functional','GAS system: 4 baseline abilities','MetaSounds music system integrated','UE5 render pipeline validated','QA sign-off on core gameplay feel'] },
+  { id: 'm3', name: 'Alpha', date: 'Jul 2026', status: 'in-progress', color: '#7c3aed', deliverables: ['All 6 zones accessible (whitebox → greybox)','World Partition streaming validated','All story acts scripted & dialogue recorded (v1)','AI systems (State Tree) complete','MetaHuman characters integrated','Sprint 8 task completion required'] },
+  { id: 'm4', name: 'Beta', date: 'Oct 2026', status: 'planned', color: '#2563eb', deliverables: ['Feature-complete build','All assets integrated and optimised','Full platform certification pass','Performance targets hit (60fps PS5 / Xbox)','Localisation complete (10 languages)','Press preview build ready'] },
+  { id: 'm5', name: 'Gold Master', date: 'Dec 2026', status: 'planned', color: '#d97706', deliverables: ['Zero Critical/High bugs open','Platform cert submission accepted','Disc manufacturing approved','Day-1 patch prepared','Launch trailer delivered','Review copies shipped'] },
+  { id: 'm6', name: 'Launch', date: 'Jan 2027', status: 'planned', color: '#dc2626', deliverables: ['Global launch — PC, PS5, Xbox Series X|S','Day-1 patch live','Post-launch support team assembled','Social media campaign active','DLC roadmap published'] },
+];
+
+export const useMilestoneStore = create(
+  persist(
+    (set) => ({
+      milestones: milestoneDefaults,
+      projectsData: {},
+
+      addMilestone: (m) => set((s) => ({ milestones: [...s.milestones, { ...m, id: 'm_' + Date.now() }] })),
+      updateMilestone: (id, updates) => set((s) => ({ milestones: s.milestones.map((m) => m.id === id ? { ...m, ...updates } : m) })),
+      deleteMilestone: (id) => set((s) => ({ milestones: s.milestones.filter((m) => m.id !== id) })),
+      switchProject: (fromId, toId) => set((s) => {
+        if (!fromId || !toId || fromId === toId) return {};
+        const projectsData = { ...s.projectsData };
+        projectsData[fromId] = { milestones: s.milestones };
+        const target = projectsData[toId] || { milestones: milestoneDefaults };
+        return {
+          projectsData,
+          milestones: target.milestones,
+        };
+      }),
+    }),
+    { name: 'gamenotion-milestones' }
+  )
+);
+
 // ─── Setup Store Subscriptions ───────────────────────────────────────────────
 let previousProjectId = useAppStore.getState().activeProjectId || 'p_nexus';
+let previousPhase = useAppStore.getState().projectPhase || 'Alpha';
 
 useAppStore.subscribe((state) => {
   const currentProjectId = state.activeProjectId;
+  const currentPhase = state.projectPhase;
+  let projectSwitched = false;
+
   if (currentProjectId && currentProjectId !== previousProjectId) {
     const fromId = previousProjectId;
     const toId = currentProjectId;
     
     previousProjectId = currentProjectId;
+    projectSwitched = true;
 
     useTaskStore.getState().switchProject(fromId, toId);
     useAssetStore.getState().switchProject(fromId, toId);
@@ -583,5 +629,23 @@ useAppStore.subscribe((state) => {
     useGDDStore.getState().switchProject(fromId, toId);
     useWorldStore.getState().switchProject(fromId, toId);
     useTechStore.getState().switchProject(fromId, toId);
+    useMilestoneStore.getState().switchProject(fromId, toId);
+  }
+
+  if (projectSwitched || (currentPhase && currentPhase !== previousPhase)) {
+    previousPhase = currentPhase;
+    const milestoneState = useMilestoneStore.getState();
+    const milestonesList = milestoneState.milestones || [];
+    const idx = milestonesList.findIndex(m => m.name.toLowerCase() === currentPhase.toLowerCase());
+    
+    if (idx !== -1) {
+      const updatedMilestones = milestonesList.map((m, i) => {
+        let newStatus = 'planned';
+        if (i < idx) newStatus = 'done';
+        else if (i === idx) newStatus = 'in-progress';
+        return { ...m, status: newStatus };
+      });
+      useMilestoneStore.setState({ milestones: updatedMilestones });
+    }
   }
 });

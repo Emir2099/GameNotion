@@ -1,9 +1,11 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTaskStore, useBugStore, useAssetStore, useAppStore } from '../../store';
 import { Badge } from '../../components/ui/Badge';
 import { Button } from '../../components/ui/Button';
-import { ArrowRight, Kanban, Bug, Package, Users, Activity, CheckCircle2, Clock, AlertCircle, TrendingUp } from 'lucide-react';
+import { ArrowRight, Kanban, Bug, Package, Users, Activity, CheckCircle2, Clock, AlertCircle, TrendingUp, Settings } from 'lucide-react';
+import { Modal, FormGroup, FormRow, Select } from '../../components/ui/Modal';
+import { useToast } from '../../lib/toast';
 import {
   ResponsiveContainer, AreaChart, Area, XAxis, YAxis, Tooltip,
   RadialBarChart, RadialBar, PieChart, Pie, Cell, Legend
@@ -56,10 +58,85 @@ export default function Dashboard() {
   const projectGenre = useAppStore(s => s.projectGenre);
   const projectEngine = useAppStore(s => s.projectEngine);
   const projectPhase = useAppStore(s => s.projectPhase);
+  const updateActiveProject = useAppStore(s => s.updateActiveProject);
+  const { addToast } = useToast();
 
   const tasks = useTaskStore(s => s.tasks);
   const bugs = useBugStore(s => s.bugs);
   const assets = useAssetStore(s => s.assets);
+
+  const [showSettingsModal, setShowSettingsModal] = useState(false);
+  const [settingsForm, setSettingsForm] = useState({
+    name: '',
+    genre: '',
+    baseEngine: 'Unreal Engine',
+    engineVersion: '',
+    phase: '',
+  });
+
+  const getEngineParts = (engStr) => {
+    if (!engStr) return { base: 'Unreal Engine', version: '5.4' };
+    const enginesList = ['Unreal Engine', 'Unity', 'Godot'];
+    const matchedBase = enginesList.find(b => engStr.startsWith(b));
+    if (matchedBase) {
+      return {
+        base: matchedBase,
+        version: engStr.replace(matchedBase, '').trim(),
+      };
+    }
+    if (engStr === 'Custom Engine') {
+      return { base: 'Custom Engine', version: '' };
+    }
+    const spaceIdx = engStr.lastIndexOf(' ');
+    if (spaceIdx !== -1) {
+      return {
+        base: engStr.substring(0, spaceIdx),
+        version: engStr.substring(spaceIdx + 1),
+      };
+    }
+    return { base: engStr, version: '' };
+  };
+
+  const handleOpenSettings = () => {
+    const parts = getEngineParts(projectEngine);
+    setSettingsForm({
+      name: projectName || '',
+      genre: projectGenre || '',
+      baseEngine: parts.base,
+      engineVersion: parts.version,
+      phase: projectPhase || 'Alpha',
+    });
+    setShowSettingsModal(true);
+  };
+
+  const handleSaveSettings = () => {
+    if (!settingsForm.name.trim()) {
+      addToast('Project name is required.', 'error');
+      return;
+    }
+
+    const fullEngine = settingsForm.baseEngine === 'Custom Engine'
+      ? 'Custom Engine'
+      : `${settingsForm.baseEngine} ${settingsForm.engineVersion}`.trim();
+
+    updateActiveProject({
+      projectName: settingsForm.name.trim(),
+      projectGenre: settingsForm.genre,
+      projectEngine: fullEngine,
+      projectPhase: settingsForm.phase,
+    });
+
+    addToast('Project settings updated.', 'success');
+    setShowSettingsModal(false);
+  };
+
+  const GENRES = [
+    'Open-World Action RPG', 'First-Person Shooter', 'Third-Person Action',
+    'Survival Horror', 'Strategy / RTS', 'Platformer', 'Stealth Action',
+    'MMO / Online RPG', 'Sports / Racing', 'Other',
+  ];
+  const ENGINES = ['Unreal Engine', 'Unity', 'Godot', 'Custom Engine'];
+  const PHASES = ['Pre-Production', 'Vertical Slice', 'Alpha', 'Beta', 'Gold Master', 'Launch'];
 
   const bugCounts = React.useMemo(() => {
     return {
@@ -107,9 +184,75 @@ export default function Dashboard() {
             <Button variant="ghost" size="lg" onClick={() => navigate('/sprints')}>
               Sprint Board <ArrowRight size={14} />
             </Button>
+            <Button variant="ghost" size="lg" icon={Settings} onClick={handleOpenSettings}>
+              Project Settings
+            </Button>
           </div>
         </div>
       </div>
+
+      {/* Project Settings Modal */}
+      <Modal
+        isOpen={showSettingsModal}
+        onClose={() => setShowSettingsModal(false)}
+        title="Project Settings"
+        size="md"
+        footer={
+          <>
+            <Button variant="ghost" onClick={() => setShowSettingsModal(false)}>Cancel</Button>
+            <Button variant="primary" onClick={handleSaveSettings}>Save Settings</Button>
+          </>
+        }
+      >
+        <FormGroup label="Project Name" required>
+          <input
+            value={settingsForm.name}
+            onChange={e => setSettingsForm(f => ({ ...f, name: e.target.value }))}
+            placeholder="e.g. Project NEXUS"
+            autoFocus
+          />
+        </FormGroup>
+
+        <FormRow>
+          <FormGroup label="Engine" required>
+            <Select
+              value={settingsForm.baseEngine}
+              onChange={e => setSettingsForm(f => ({ ...f, baseEngine: e.target.value }))}
+            >
+              {ENGINES.map(eng => <option key={eng} value={eng}>{eng}</option>)}
+            </Select>
+          </FormGroup>
+
+          <FormGroup label="Engine Version">
+            <input
+              value={settingsForm.engineVersion}
+              onChange={e => setSettingsForm(f => ({ ...f, engineVersion: e.target.value }))}
+              placeholder="e.g. 5.4, 2022.3 LTS"
+              disabled={settingsForm.baseEngine === 'Custom Engine'}
+            />
+          </FormGroup>
+        </FormRow>
+
+        <FormRow>
+          <FormGroup label="Genre" required>
+            <Select
+              value={settingsForm.genre}
+              onChange={e => setSettingsForm(f => ({ ...f, genre: e.target.value }))}
+            >
+              {GENRES.map(g => <option key={g} value={g}>{g}</option>)}
+            </Select>
+          </FormGroup>
+
+          <FormGroup label="Project Phase" required>
+            <Select
+              value={settingsForm.phase}
+              onChange={e => setSettingsForm(f => ({ ...f, phase: e.target.value }))}
+            >
+              {PHASES.map(p => <option key={p} value={p}>{p}</option>)}
+            </Select>
+          </FormGroup>
+        </FormRow>
+      </Modal>
 
       <div className={styles.body}>
         {/* ── Stat Cards ─────────────────────────────────────────────────── */}
