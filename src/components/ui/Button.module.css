@@ -5,8 +5,10 @@
   gap: 6px;
   border: none;
   border-radius: var(--radius-md);
-  font-family: var(--font-sans);
-  font-weight: 500;
+  font-family: var(--font-cyber);
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
   cursor: pointer;
   transition: all var(--duration-base) var(--ease-default);
   white-space: nowrap;

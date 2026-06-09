@@ -6,9 +6,10 @@
 }
 .headerInfo { flex: 1; }
 .pageTitle {
-  font-family: var(--font-display);
+  font-family: var(--font-cyber);
   font-size: var(--text-2xl); font-weight: 800;
   color: var(--text-primary); margin-bottom: 4px;
+  letter-spacing: 0.05em; text-transform: uppercase;
 }
 .sprintGoal { font-size: var(--text-sm); color: var(--text-secondary); margin-bottom: 6px; }
 .sprintDates {

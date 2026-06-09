@@ -43,10 +43,12 @@
 }
 
 .title {
-  font-family: var(--font-display);
+  font-family: var(--font-cyber);
   font-size: var(--text-lg);
   font-weight: 700;
   color: var(--text-primary);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
 }
 
 .closeBtn {

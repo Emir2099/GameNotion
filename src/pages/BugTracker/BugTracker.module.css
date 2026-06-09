@@ -1,6 +1,6 @@
 .page { padding: 24px 28px 40px; min-height: 100%; }
 .header { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 20px; gap: 16px; }
-.title { font-family: var(--font-display); font-size: var(--text-2xl); font-weight: 800; color: var(--text-primary); }
+.title { font-family: var(--font-cyber); font-size: var(--text-2xl); font-weight: 800; color: var(--text-primary); letter-spacing: 0.05em; text-transform: uppercase; }
 .subtitle { font-size: var(--text-sm); color: var(--text-secondary); margin-top: 3px; }
 
 .summaryRow { display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; }
@@ -13,7 +13,7 @@
 }
 .summaryCard:hover { border-color: var(--border-strong); transform: translateY(-2px); }
 .summaryActive { border-color: var(--brand-500); background: var(--brand-dim); }
-.summaryNum { display: block; font-family: var(--font-display); font-size: 28px; font-weight: 800; color: var(--text-primary); line-height: 1; margin-bottom: 4px; }
+.summaryNum { display: block; font-family: var(--font-cyber); font-size: 28px; font-weight: 800; color: var(--text-primary); line-height: 1; margin-bottom: 4px; letter-spacing: 0.05em; }
 .summaryLabel { font-size: var(--text-xs); color: var(--text-secondary); font-weight: 600; }
 
 .toolbar { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; flex-wrap: wrap; }

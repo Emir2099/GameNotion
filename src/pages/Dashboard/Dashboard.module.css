@@ -34,11 +34,11 @@
   width: fit-content;
 }
 .heroTitle {
-  font-family: var(--font-display);
+  font-family: var(--font-cyber);
   font-size: var(--text-5xl);
   font-weight: 800;
   line-height: 1;
-  letter-spacing: -0.02em;
+  letter-spacing: 0.03em;
   margin-bottom: 8px;
   background: linear-gradient(135deg, #fff 30%, #c4b5fd 100%);
   -webkit-background-clip: text;
@@ -122,7 +122,7 @@
 .statSub {
   font-size: 11px;
   color: var(--text-tertiary);
-  font-family: var(--font-sans);
+  font-family: var(--font-cyber);
 }
 
 /* Content grid */
@@ -197,7 +197,7 @@
 }
 .donutPct {
   display: block;
-  font-family: var(--font-display);
+  font-family: var(--font-cyber);
   font-size: 24px; font-weight: 800;
   color: var(--text-primary);
 }

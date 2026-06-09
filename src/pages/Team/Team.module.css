@@ -1,6 +1,6 @@
 .page { padding: 24px 28px 40px; min-height: 100%; }
 .header { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 24px; gap: 16px; }
-.title { font-family: var(--font-display); font-size: var(--text-2xl); font-weight: 800; color: var(--text-primary); }
+.title { font-family: var(--font-cyber); font-size: var(--text-2xl); font-weight: 800; color: var(--text-primary); letter-spacing: 0.05em; text-transform: uppercase; }
 .subtitle { font-size: var(--text-sm); color: var(--text-secondary); margin-top: 3px; }
 .deptSection { margin-bottom: 24px; }
 .deptHeader { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }

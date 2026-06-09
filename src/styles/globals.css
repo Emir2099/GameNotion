@@ -3,7 +3,7 @@
    Production-Grade CSS Token System
 ========================================= */
 
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&family=Orbitron:wght@400;500;700;900&family=Rajdhani:wght@500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Orbitron:wght@400;500;700;900&family=Rajdhani:wght@400;500;600;700&display=swap');
 
 /* ============================
    DESIGN TOKENS
@@ -71,10 +71,10 @@
   --orange-dim:  rgba(255, 109, 0, 0.12);
 
   /* Typography Scale */
-  --font-sans:   'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  --font-display:'Space Grotesk', 'Inter', sans-serif;
+  --font-sans:   'Rajdhani', 'Orbitron', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-display:'Orbitron', 'Rajdhani', sans-serif;
   --font-mono:   'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
-  --font-cyber:  'Orbitron', 'Rajdhani', 'Space Grotesk', sans-serif;
+  --font-cyber:  'Orbitron', 'Rajdhani', sans-serif;
 
   --text-xs:   11px;
   --text-sm:   12px;
@@ -160,6 +160,7 @@ body {
   font-family: var(--font-sans);
   font-size: var(--text-base);
   line-height: 1.6;
+  letter-spacing: 0.02em;
   color: var(--text-primary);
   background: radial-gradient(circle at 5% 5%, rgba(124, 58, 237, 0.12) 0%, transparent 45%), 
               radial-gradient(circle at 95% 95%, rgba(0, 240, 255, 0.08) 0%, transparent 45%), 
@@ -280,10 +281,12 @@ body::after {
    TYPOGRAPHY
 ============================ */
 h1, h2, h3, h4, h5, h6 {
-  font-family: var(--font-display);
+  font-family: var(--font-cyber);
   font-weight: 700;
   color: var(--text-primary);
   line-height: 1.25;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
 }
 
 p { color: var(--text-secondary); line-height: 1.7; }
@@ -335,11 +338,13 @@ code, pre, kbd {
 
 button, [role="button"] {
   cursor: pointer;
-  font-family: var(--font-sans);
+  font-family: var(--font-cyber);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
 }
 
 input, select, textarea {
-  font-family: var(--font-sans);
+  font-family: var(--font-sans);  /* Rajdhani — readable cyber */
   color: var(--text-primary);
   background: var(--bg-elevated);
   border: 1px solid var(--border-default);
