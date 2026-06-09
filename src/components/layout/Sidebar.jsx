@@ -118,12 +118,18 @@ export function Sidebar({ taskStats, bugCounts }) {
       <div className={styles.brand}>
         {!collapsed ? (
           <>
-            <div className={styles.brandIcon} style={{ background: 'none', boxShadow: 'none', borderRadius: '4px', overflow: 'hidden' }}>
-              <img src="/logo.png" alt="GameNotion Logo" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-            </div>
-            <div className={styles.brandText}>
-              <span className={styles.brandName}>GameNotion</span>
-              <span className={styles.brandSub}>UE5 Workspace</span>
+            <div
+              onClick={() => useAppStore.setState({ landingSeen: false })}
+              title="View Systems Landing Page"
+              style={{ display: 'flex', alignItems: 'center', gap: '10px', cursor: 'pointer', flex: 1 }}
+            >
+              <div className={styles.brandIcon} style={{ background: 'none', boxShadow: 'none', borderRadius: '4px', overflow: 'hidden', margin: 0 }}>
+                <img src="/logo.png" alt="GameNotion Logo" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+              </div>
+              <div className={styles.brandText}>
+                <span className={styles.brandName}>GameNotion</span>
+                <span className={styles.brandSub}>UE5 Workspace</span>
+              </div>
             </div>
             <button
               className={styles.collapseBtn}

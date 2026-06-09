@@ -17,11 +17,31 @@ import LevelDesign from './pages/LevelDesign/LevelDesign';
 import TechStack from './pages/TechStack/TechStack';
 import Milestones from './pages/Milestones/Milestones';
 import Team from './pages/Team/Team';
-
+import LandingPage from './pages/Landing/LandingPage';
 import './styles/globals.css';
 
 function AppShell() {
   const onboardingDone = useAppStore(s => s.onboardingDone);
+  const landingSeen = useAppStore(s => s.landingSeen);
+
+  React.useEffect(() => {
+    if (window.location.pathname === '/landing') {
+      useAppStore.setState({ landingSeen: false });
+    }
+  }, []);
+
+  if (!landingSeen) {
+    return (
+      <LandingPage
+        onEnter={() => {
+          useAppStore.setState({ landingSeen: true });
+          if (window.location.pathname === '/landing') {
+            window.history.pushState({}, '', '/');
+          }
+        }}
+      />
+    );
+  }
 
   return (
     <>

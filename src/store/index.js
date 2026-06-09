@@ -14,6 +14,7 @@ export const useAppStore = create(
       projectPhase: 'Alpha',
       sidebarCollapsed: false,
       onboardingDone: false,
+      landingSeen: false,
       currentSprint: 5,
       helpPanelPage: null,
       projects: [
