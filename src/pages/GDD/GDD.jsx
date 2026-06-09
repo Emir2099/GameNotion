@@ -1,4 +1,5 @@
-import React, { useEffect, useCallback, useState } from 'react';
+/* eslint-disable react/prop-types */
+import { useEffect, useState } from 'react';
 import { useEditor, EditorContent } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import Placeholder from '@tiptap/extension-placeholder';
@@ -12,14 +13,8 @@ import TableCell from '@tiptap/extension-table-cell';
 import TableHeader from '@tiptap/extension-table-header';
 import CharacterCount from '@tiptap/extension-character-count';
 import { useGDDStore } from '../../store';
-import { Bold, Italic, Strikethrough, Code, Heading1, Heading2, Heading3, List, ListOrdered, Quote, Minus, CheckSquare, Table as TableIcon, Highlighter, Save, Download, Clock } from 'lucide-react';
+import { Bold, Italic, Strikethrough, Code, Heading1, Heading2, Heading3, List, ListOrdered, Quote, Minus, CheckSquare, Table as TableIcon, Highlighter, Download, Clock, Trash2 } from 'lucide-react';
 import styles from './GDD.module.css';
-
-const SECTIONS = [
-  { key: 'overview', label: '📖 Overview', icon: '📖' },
-  { key: 'pillars', label: '🏛️ Design Pillars', icon: '🏛️' },
-  { key: 'mechanics', label: '⚙️ Core Mechanics', icon: '⚙️' },
-];
 
 // ── Slash Command Menu ────────────────────────────────────────────────────────
 const SLASH_COMMANDS = [
@@ -35,7 +30,7 @@ const SLASH_COMMANDS = [
   { label: 'Divider', desc: 'Horizontal rule', icon: '—', action: (e) => e.chain().focus().setHorizontalRule().run() },
 ];
 
-function SlashMenu({ editor, query, pos, onSelect, onClose }) {
+function SlashMenu({ editor, query, pos, onClose }) {
   const filtered = SLASH_COMMANDS.filter(c =>
     c.label.toLowerCase().includes(query.toLowerCase()) ||
     c.desc.toLowerCase().includes(query.toLowerCase())
@@ -58,12 +53,14 @@ function SlashMenu({ editor, query, pos, onSelect, onClose }) {
 }
 
 export default function GDD() {
-  const { sections, updateSectionContent, lastSaved } = useGDDStore();
+  const { sections, sectionsList, updateSectionContent, addSection, deleteSection, lastSaved } = useGDDStore();
   const [activeSection, setActiveSection] = useState('overview');
   const [saveStatus, setSaveStatus] = useState('saved');
   const [slashPos, setSlashPos] = useState(null);
   const [slashQuery, setSlashQuery] = useState('');
   const [showSlash, setShowSlash] = useState(false);
+  const [isAdding, setIsAdding] = useState(false);
+  const [newSectionTitle, setNewSectionTitle] = useState('');
 
   const editor = useEditor({
     extensions: [
@@ -105,9 +102,13 @@ export default function GDD() {
   // Switch sections
   useEffect(() => {
     if (editor) {
-      editor.commands.setContent(sections[activeSection] || '');
+      const current = editor.getHTML();
+      const expected = sections[activeSection] || '';
+      if (current !== expected) {
+        editor.commands.setContent(expected);
+      }
     }
-  }, [activeSection, editor]);
+  }, [activeSection, editor, sections]);
 
   const exportMarkdown = () => {
     if (!editor) return;
@@ -130,19 +131,75 @@ export default function GDD() {
       {/* Sidebar TOC */}
       <aside className={styles.toc}>
         <div className={styles.tocTitle}>Contents</div>
-        {SECTIONS.map(s => (
-          <button
-            key={s.key}
-            className={`${styles.tocItem} ${activeSection === s.key ? styles.tocItemActive : ''}`}
-            onClick={() => setActiveSection(s.key)}
-          >
-            {s.label}
-          </button>
+        {(sectionsList || []).map(s => (
+          <div key={s.key} className={styles.tocItemContainer}>
+            <button
+              className={`${styles.tocItem} ${activeSection === s.key ? styles.tocItemActive : ''}`}
+              onClick={() => setActiveSection(s.key)}
+            >
+              {s.label}
+            </button>
+            {s.key.startsWith('sec_') && (
+              <button
+                className={styles.tocItemDelete}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  if (confirm(`Are you sure you want to delete the section "${s.label}"?`)) {
+                    deleteSection(s.key);
+                    if (activeSection === s.key) {
+                      setActiveSection('overview');
+                    }
+                  }
+                }}
+                title="Delete section"
+              >
+                <Trash2 size={12} />
+              </button>
+            )}
+          </div>
         ))}
         <div className={styles.tocDivider} />
-        <button className={styles.tocAddSection} onClick={() => alert('Custom sections coming — add your own GDD chapter here.')}>
-          + Add Section
-        </button>
+        {isAdding ? (
+          <div className={styles.addSectionForm}>
+            <input
+              className={styles.addSectionInput}
+              value={newSectionTitle}
+              onChange={e => setNewSectionTitle(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') {
+                  if (newSectionTitle.trim()) {
+                    addSection(newSectionTitle.trim());
+                    setNewSectionTitle('');
+                    setIsAdding(false);
+                  }
+                } else if (e.key === 'Escape') {
+                  setIsAdding(false);
+                }
+              }}
+              placeholder="Section title…"
+              autoFocus
+            />
+            <div className={styles.addSectionBtns}>
+              <button
+                className={styles.addSectionSave}
+                onClick={() => {
+                  if (newSectionTitle.trim()) {
+                    addSection(newSectionTitle.trim());
+                    setNewSectionTitle('');
+                    setIsAdding(false);
+                  }
+                }}
+              >
+                Add
+              </button>
+              <button className={styles.addSectionCancel} onClick={() => setIsAdding(false)}>Cancel</button>
+            </div>
+          </div>
+        ) : (
+          <button className={styles.tocAddSection} onClick={() => setIsAdding(true)}>
+            + Add Section
+          </button>
+        )}
       </aside>
 
       {/* Editor */}

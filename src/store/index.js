@@ -345,26 +345,67 @@ IDLE → ATTACK → COMBO → PARRY_WINDOW(12f) → COUNTER → FINISHER
 export const useGDDStore = create(
   persist(
     (set) => ({
+      sectionsList: [
+        { key: 'overview', label: '📖 Overview' },
+        { key: 'pillars', label: '🏛️ Design Pillars' },
+        { key: 'mechanics', label: '⚙️ Core Mechanics' },
+      ],
       sections: defaultGDDContent,
       lastSaved: null,
       projectsData: {},
 
       updateSection: () => set({ sections: { ...defaultGDDContent }, lastSaved: new Date().toISOString() }),
       updateSectionContent: (key, html) => set((s) => ({ sections: { ...s.sections, [key]: html }, lastSaved: new Date().toISOString() })),
+      addSection: (label) => set((s) => {
+        const key = 'sec_' + Date.now();
+        const newSection = { key, label: '📝 ' + label };
+        const updatedList = [...(s.sectionsList || []), newSection];
+        const updatedSections = {
+          ...s.sections,
+          [key]: `<h1>${label}</h1><p>Start writing your new section content here...</p>`,
+        };
+        return {
+          sectionsList: updatedList,
+          sections: updatedSections,
+          lastSaved: new Date().toISOString(),
+        };
+      }),
+      deleteSection: (key) => set((s) => {
+        const updatedList = (s.sectionsList || []).filter(item => item.key !== key);
+        const updatedSections = { ...s.sections };
+        delete updatedSections[key];
+        return {
+          sectionsList: updatedList,
+          sections: updatedSections,
+          lastSaved: new Date().toISOString(),
+        };
+      }),
       switchProject: (fromId, toId) => set((s) => {
         if (!fromId || !toId || fromId === toId) return {};
         const projectsData = { ...s.projectsData };
-        projectsData[fromId] = { sections: s.sections };
+        projectsData[fromId] = { sections: s.sections, sectionsList: s.sectionsList };
         const target = projectsData[toId] || {
+          sectionsList: [
+            { key: 'overview', label: '📖 Overview' },
+            { key: 'pillars', label: '🏛️ Design Pillars' },
+            { key: 'mechanics', label: '⚙️ Core Mechanics' },
+          ],
           sections: {
-            overview: `<h1>New Project — Game Design Document</h1><p>Start writing your design document here...</p>`,
-            pillars: `<h2>Design Pillars</h2><p>Define your design pillars...</p>`,
-            mechanics: `<h2>Core Mechanics</h2><p>Define your core mechanics...</p>`,
+            overview: `<h1>Project NEXUS — Game Design Document</h1><p><strong>Version:</strong> 2.4 | <strong>Last Updated:</strong> June 2026 | <strong>Status:</strong> Active</p><p>Project NEXUS is a cinematic open-world action RPG built on Unreal Engine 5.4, leveraging Nanite geometry, Lumen dynamic global illumination, Chaos physics, and MetaSounds adaptive audio to deliver an unprecedented level of environmental fidelity and systemic depth.</p><h2>High Concept</h2><p>In a future where Earth's biosphere has collapsed and humanity survives in the NEXUS — a network of terraformed megacities — a disgraced enforcer named Kael Voss must navigate a war between factions, uncover the truth behind the AI Silence, and decide the fate of what remains of civilisation.</p><blockquote>The NEXUS wasn't built to contain us. It was built to remember us. — ARIA, NEXUS Core AI</blockquote><h2>Elevator Pitch</h2><p><em>Elden Ring's systemic depth × Cyberpunk 2077's narrative richness × God of War's combat polish.</em></p>`,
+            pillars: `<h2>Design Pillars</h2><p>These four pillars inform every design decision. If a feature doesn't serve at least one pillar, it is cut.</p><h3>1. Emergent World</h3><p>Every system reacts to every other. Weather affects combat, which affects faction morale, which affects NPC behavior, which affects the economy. Players should feel the world is alive independently of their actions.</p><h3>2. Visceral Combat</h3><p>Fast-paced, skill-expressive melee and ranged combat with deep animation state machines, GAS-driven abilities, and physics-driven hit reactions. Combat must feel weighty, responsive, and readable at all times.</p><h3>3. Living Narrative</h3><p>Over 200 decision points. NPCs remember player actions across sessions. Factions rise and fall based on player choices. No "right" ending — only consequential endings.</p><h3>4. Technical Showcase</h3><p>This is a UE5 flagship title. Every major UE5.4 feature should have a meaningful, non-gratuitous presence: Nanite, Lumen, PCG, World Partition, MetaSounds, Motion Matching, MetaHuman.</p>`,
+            mechanics: `<h2>Core Mechanics</h2><h3>Combat System</h3><p>Built on a 3-layer model: <strong>Initiation → Flow → Finisher</strong>. The GAS ability system handles all combat abilities with proper cost, cooldown, and tag-based gating.</p><pre><code>// Combat State Priority (Input Buffer Queue)
+IDLE → ATTACK → COMBO → PARRY_WINDOW(12f) → COUNTER → FINISHER
+       ↓
+  [Light Attack] → Combo1 → Combo2 → Combo3(knockback)
+  [Heavy Attack] → Stagger → Execute
+  [Dodge]        → iFrame(12f) → Recovery(8f)
+  [Block+Atk]    → Perfect Parry(8f) → Riposte</code></pre><h3>Exploration</h3><p>64km² seamless open world with no loading screens. World Partition handles streaming. 6 distinct biomes with unique traversal mechanics.</p><h3>Faction System</h3><p>5 factions with dynamic reputation (0–100). Faction rep affects: shop prices, NPC dialogue, quest availability, territory control, and enemy aggression.</p>`,
           }
         };
         return {
           projectsData,
           sections: target.sections,
+          sectionsList: target.sectionsList,
         };
       }),
     }),

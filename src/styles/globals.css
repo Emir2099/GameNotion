@@ -503,29 +503,99 @@ textarea {
 }
 
 /* Task list */
-.ProseMirror ul[data-type="taskList"] {
-  list-style: none;
-  padding-left: 0;
+.ProseMirror ul[data-type="taskList"],
+.ProseMirror ul:has(input[type="checkbox"]) {
+  list-style: none !important;
+  padding-left: 0 !important;
+  margin: 10px 0 !important;
 }
 
-.ProseMirror li[data-type="taskItem"] {
-  display: flex;
-  align-items: flex-start;
-  gap: 8px;
+.ProseMirror li[data-type="taskItem"],
+.ProseMirror li.task-list-item,
+.ProseMirror .task-list-item,
+.ProseMirror li:has(input[type="checkbox"]) {
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: flex-start !important;
+  gap: 10px !important;
+  margin-bottom: 6px !important;
 }
 
-.ProseMirror li[data-type="taskItem"] > label {
-  flex-shrink: 0;
-  margin-top: 2px;
+.ProseMirror li[data-type="taskItem"] > label,
+.ProseMirror li.task-list-item > label,
+.ProseMirror .task-list-item > label,
+.ProseMirror li:has(input[type="checkbox"]) > label,
+.ProseMirror li:has(input[type="checkbox"]) > input[type="checkbox"] {
+  flex-shrink: 0 !important;
+  margin-top: 5px !important;
+  display: inline-flex !important;
+  align-items: center !important;
 }
 
-.ProseMirror li[data-type="taskItem"] > div {
-  flex: 1;
+.ProseMirror input[type="checkbox"] {
+  appearance: none !important;
+  -webkit-appearance: none !important;
+  width: 15px !important;
+  height: 15px !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  cursor: pointer !important;
+  background-color: var(--bg-elevated) !important;
+  border: 1px solid var(--border-default) !important;
+  border-radius: var(--radius-sm) !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  position: relative !important;
+  box-sizing: border-box !important;
+  transition: all var(--duration-fast) var(--ease-default) !important;
 }
 
-.ProseMirror li[data-type="taskItem"][data-checked="true"] > div {
-  text-decoration: line-through;
-  color: var(--text-disabled);
+.ProseMirror input[type="checkbox"]:hover {
+  border-color: var(--border-accent) !important;
+  box-shadow: 0 0 4px var(--brand-glow) !important;
+}
+
+.ProseMirror input[type="checkbox"]:checked {
+  background-color: var(--brand-500) !important;
+  border-color: var(--brand-400) !important;
+  box-shadow: 0 0 6px rgba(124, 58, 237, 0.4) !important;
+}
+
+.ProseMirror input[type="checkbox"]:checked::after {
+  content: '' !important;
+  position: absolute !important;
+  left: 4px !important;
+  top: 1px !important;
+  width: 5px !important;
+  height: 8px !important;
+  border: solid #ffffff !important;
+  border-width: 0 2px 2px 0 !important;
+  transform: rotate(45deg) !important;
+}
+
+.ProseMirror input[type="checkbox"]:focus-visible {
+  outline: 1px solid var(--border-focus) !important;
+}
+
+.ProseMirror li[data-type="taskItem"] > div,
+.ProseMirror li.task-list-item > div,
+.ProseMirror .task-list-item > div,
+.ProseMirror li:has(input[type="checkbox"]) > div,
+.ProseMirror li:has(input[type="checkbox"]) > p {
+  flex: 1 1 auto !important;
+  min-width: 0 !important;
+}
+
+.ProseMirror li[data-type="taskItem"][data-checked="true"] > div,
+.ProseMirror li.task-list-item[data-checked="true"] > div,
+.ProseMirror .task-list-item[data-checked="true"] > div,
+.ProseMirror li:has(input[type="checkbox"])[data-checked="true"] > div,
+.ProseMirror li:has(input[type="checkbox"])[data-checked="true"] > p,
+.ProseMirror li:has(input[type="checkbox"]):has(input[type="checkbox"]:checked) > div,
+.ProseMirror li:has(input[type="checkbox"]):has(input[type="checkbox"]:checked) > p {
+  text-decoration: line-through !important;
+  color: var(--text-disabled) !important;
 }
 
 /* ============================
