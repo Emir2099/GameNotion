@@ -3,7 +3,7 @@ import { useTeamStore } from '../../store';
 import { useToast } from '../../lib/toast';
 import { Button } from '../../components/ui/Button';
 import { Badge } from '../../components/ui/Badge';
-import { Modal, FormGroup, FormRow } from '../../components/ui/Modal';
+import { Modal, FormGroup, FormRow, Select } from '../../components/ui/Modal';
 import { Plus, Edit3, Trash2, UsersRound, Mail, Globe, Wifi, WifiOff } from 'lucide-react';
 import styles from './Team.module.css';
 
@@ -99,8 +99,8 @@ export default function Team() {
         </FormRow>
         <FormGroup label="Role / Title" required><input value={form.role} onChange={e => setForm(f=>({...f, role:e.target.value}))} placeholder="e.g. Lead Programmer" /></FormGroup>
         <FormRow>
-          <FormGroup label="Department"><select value={form.department} onChange={e => setForm(f=>({...f, department:e.target.value}))}>{DEPARTMENTS.map(d=><option key={d} value={d}>{d}</option>)}</select></FormGroup>
-          <FormGroup label="Timezone"><select value={form.timezone} onChange={e => setForm(f=>({...f, timezone:e.target.value}))}>{TIMEZONES.map(t=><option key={t} value={t}>{t}</option>)}</select></FormGroup>
+          <FormGroup label="Department"><Select value={form.department} onChange={e => setForm(f=>({...f, department:e.target.value}))}>{DEPARTMENTS.map(d=><option key={d} value={d}>{d}</option>)}</Select></FormGroup>
+          <FormGroup label="Timezone"><Select value={form.timezone} onChange={e => setForm(f=>({...f, timezone:e.target.value}))}>{TIMEZONES.map(t=><option key={t} value={t}>{t}</option>)}</Select></FormGroup>
         </FormRow>
         <FormGroup label="Avatar Color">
           <div style={{display:'flex', gap:8, flexWrap:'wrap'}}>

@@ -3,7 +3,7 @@ import { useLevelStore } from '../../store';
 import { useToast } from '../../lib/toast';
 import { Badge } from '../../components/ui/Badge';
 import { Button } from '../../components/ui/Button';
-import { Modal, FormGroup, FormRow } from '../../components/ui/Modal';
+import { Modal, FormGroup, FormRow, Select } from '../../components/ui/Modal';
 import { Plus, Edit3, Trash2, Map, Users, Package } from 'lucide-react';
 import styles from './LevelDesign.module.css';
 
@@ -126,12 +126,12 @@ export default function LevelDesign() {
           <FormGroup label="Level Name" required><input value={form.name} onChange={e => setForm(f=>({...f, name:e.target.value}))} placeholder="NEXUS Central — Tutorial Zone" autoFocus /></FormGroup>
         </FormRow>
         <FormRow>
-          <FormGroup label="Biome"><select value={form.biome} onChange={e => setForm(f=>({...f, biome:e.target.value}))}>{BIOMES.map(b => <option key={b} value={b}>{b}</option>)}</select></FormGroup>
+          <FormGroup label="Biome"><Select value={form.biome} onChange={e => setForm(f=>({...f, biome:e.target.value}))}>{BIOMES.map(b => <option key={b} value={b}>{b}</option>)}</Select></FormGroup>
           <FormGroup label="Size"><input value={form.size} onChange={e => setForm(f=>({...f, size:e.target.value}))} placeholder="18 km²" /></FormGroup>
         </FormRow>
         <FormRow>
-          <FormGroup label="Status"><select value={form.status} onChange={e => setForm(f=>({...f, status:e.target.value}))}>{STATUS_OPTS.map(s=><option key={s.val} value={s.val}>{s.label}</option>)}</select></FormGroup>
-          <FormGroup label="Lead Designer"><select value={form.designer} onChange={e => setForm(f=>({...f, designer:e.target.value}))}>{DESIGNERS.map(d=><option key={d} value={d}>{d}</option>)}</select></FormGroup>
+          <FormGroup label="Status"><Select value={form.status} onChange={e => setForm(f=>({...f, status:e.target.value}))}>{STATUS_OPTS.map(s=><option key={s.val} value={s.val}>{s.label}</option>)}</Select></FormGroup>
+          <FormGroup label="Lead Designer"><Select value={form.designer} onChange={e => setForm(f=>({...f, designer:e.target.value}))}>{DESIGNERS.map(d=><option key={d} value={d}>{d}</option>)}</Select></FormGroup>
         </FormRow>
         <FormGroup label={`Progress — ${form.progress}%`}>
           <input type="range" min={0} max={100} value={form.progress} onChange={e => setForm(f=>({...f, progress:parseInt(e.target.value)}))} style={{width:'100%', accentColor:'var(--brand-500)'}} />

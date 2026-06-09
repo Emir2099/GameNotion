@@ -6,7 +6,7 @@ import { useTaskStore } from '../../store';
 import { useToast } from '../../lib/toast';
 import { Badge, PRIORITY_LABELS } from '../../components/ui/Badge';
 import { Button } from '../../components/ui/Button';
-import { Modal, FormGroup, FormRow } from '../../components/ui/Modal';
+import { Modal, FormGroup, FormRow, Select } from '../../components/ui/Modal';
 import { Plus, Calendar, GripVertical, Trash2, Edit3, MoreVertical, Clock, Settings } from 'lucide-react';
 import styles from './SprintBoard.module.css';
 
@@ -272,24 +272,24 @@ export default function SprintBoard() {
         </FormGroup>
         <FormRow>
           <FormGroup label="Priority" required>
-            <select value={formData.priority} onChange={e => setFormData(f => ({ ...f, priority: e.target.value }))}>
+            <Select value={formData.priority} onChange={e => setFormData(f => ({ ...f, priority: e.target.value }))}>
               <option value="critical">🔴 Critical</option>
               <option value="high">🟠 High</option>
               <option value="medium">🟡 Medium</option>
               <option value="low">🟢 Low</option>
-            </select>
+            </Select>
           </FormGroup>
           <FormGroup label="Category">
-            <select value={formData.category} onChange={e => setFormData(f => ({ ...f, category: e.target.value }))}>
+            <Select value={formData.category} onChange={e => setFormData(f => ({ ...f, category: e.target.value }))}>
               {CATEGORIES.map(c => <option key={c} value={c}>{c}</option>)}
-            </select>
+            </Select>
           </FormGroup>
         </FormRow>
         <FormRow>
           <FormGroup label="Assignee">
-            <select value={formData.assignee} onChange={e => setFormData(f => ({ ...f, assignee: e.target.value }))}>
+            <Select value={formData.assignee} onChange={e => setFormData(f => ({ ...f, assignee: e.target.value }))}>
               {ASSIGNEES.map(a => <option key={a} value={a}>{a}</option>)}
-            </select>
+            </Select>
           </FormGroup>
           <FormGroup label="Due Date">
             <input type="date" value={formData.dueDate} onChange={e => setFormData(f => ({ ...f, dueDate: e.target.value }))} />
@@ -297,9 +297,9 @@ export default function SprintBoard() {
         </FormRow>
         <FormRow>
           <FormGroup label="Column">
-            <select value={formData.column} onChange={e => setFormData(f => ({ ...f, column: e.target.value }))}>
+            <Select value={formData.column} onChange={e => setFormData(f => ({ ...f, column: e.target.value }))}>
               {COLUMNS.map(c => <option key={c.id} value={c.id}>{c.label}</option>)}
-            </select>
+            </Select>
           </FormGroup>
           <FormGroup label="Tags" hint="Comma-separated — e.g. combat, GAS, animation">
             <input value={formData.tags} onChange={e => setFormData(f => ({ ...f, tags: e.target.value }))} placeholder="combat, GAS, animation…" />

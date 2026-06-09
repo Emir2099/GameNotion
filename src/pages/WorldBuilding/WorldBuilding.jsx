@@ -2,7 +2,7 @@ import React, { useState, useMemo } from 'react';
 import { useWorldStore } from '../../store';
 import { useToast } from '../../lib/toast';
 import { Button } from '../../components/ui/Button';
-import { Modal, FormGroup, FormRow } from '../../components/ui/Modal';
+import { Modal, FormGroup, FormRow, Select } from '../../components/ui/Modal';
 import { Plus, Search, Edit3, Trash2, Globe } from 'lucide-react';
 import styles from './WorldBuilding.module.css';
 
@@ -105,7 +105,7 @@ export default function WorldBuilding() {
         footer={<><Button variant="ghost" onClick={() => setShowModal(false)}>Cancel</Button><Button variant="primary" onClick={handleSave}>{editingEntry ? 'Save' : 'Create'}</Button></>}
       >
         <FormRow>
-          <FormGroup label="Category"><select value={form.category} onChange={e => setForm(f => ({...f, category:e.target.value}))}>{CATEGORIES.filter(c=>c!=='All').map(c=><option key={c} value={c}>{c}</option>)}</select></FormGroup>
+          <FormGroup label="Category"><Select value={form.category} onChange={e => setForm(f => ({...f, category:e.target.value}))}>{CATEGORIES.filter(c=>c!=='All').map(c=><option key={c} value={c}>{c}</option>)}</Select></FormGroup>
           <FormGroup label="Title" required><input value={form.title} onChange={e => setForm(f => ({...f, title:e.target.value}))} placeholder="Entry title" autoFocus /></FormGroup>
         </FormRow>
         <FormGroup label="Tags" hint="Comma-separated — e.g. Zone 2, Iron Veil, Critical Lore"><input value={form.tags} onChange={e => setForm(f => ({...f, tags:e.target.value}))} placeholder="Zone 2, Iron Veil, Volcanic…" /></FormGroup>

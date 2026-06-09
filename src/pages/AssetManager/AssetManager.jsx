@@ -3,7 +3,7 @@ import { useAssetStore } from '../../store';
 import { useToast } from '../../lib/toast';
 import { Badge, TYPE_LABELS, STATUS_LABELS, PRIORITY_LABELS } from '../../components/ui/Badge';
 import { Button } from '../../components/ui/Button';
-import { Modal, FormGroup, FormRow } from '../../components/ui/Modal';
+import { Modal, FormGroup, FormRow, Select } from '../../components/ui/Modal';
 import { Plus, Search, Filter, Trash2, Edit3, ChevronUp, ChevronDown } from 'lucide-react';
 import styles from './AssetManager.module.css';
 
@@ -134,12 +134,12 @@ export default function AssetManager() {
       >
         <FormGroup label="Asset Name" required hint="Use UE5 naming convention: SM_, T_, ABP_, SFX_, BP_, NS_"><input value={form.name} onChange={e => setForm(f => ({...f, name: e.target.value}))} placeholder="e.g. SM_Rock_Desert_01" autoFocus /></FormGroup>
         <FormRow>
-          <FormGroup label="Type"><select value={form.type} onChange={e => setForm(f => ({...f, type: e.target.value}))}>{TYPES.map(t => <option key={t} value={t}>{TYPE_LABELS[t]}</option>)}</select></FormGroup>
-          <FormGroup label="Status"><select value={form.status} onChange={e => setForm(f => ({...f, status: e.target.value}))}>{STATUSES.map(s => <option key={s} value={s}>{STATUS_LABELS[s]}</option>)}</select></FormGroup>
+          <FormGroup label="Type"><Select value={form.type} onChange={e => setForm(f => ({...f, type: e.target.value}))}>{TYPES.map(t => <option key={t} value={t}>{TYPE_LABELS[t]}</option>)}</Select></FormGroup>
+          <FormGroup label="Status"><Select value={form.status} onChange={e => setForm(f => ({...f, status: e.target.value}))}>{STATUSES.map(s => <option key={s} value={s}>{STATUS_LABELS[s]}</option>)}</Select></FormGroup>
         </FormRow>
         <FormRow>
-          <FormGroup label="Owner"><select value={form.owner} onChange={e => setForm(f => ({...f, owner: e.target.value}))}>{OWNERS.map(o => <option key={o} value={o}>{o}</option>)}</select></FormGroup>
-          <FormGroup label="Priority"><select value={form.priority} onChange={e => setForm(f => ({...f, priority: e.target.value}))}>{PRIORITIES.map(p => <option key={p} value={p}>{PRIORITY_LABELS[p]}</option>)}</select></FormGroup>
+          <FormGroup label="Owner"><Select value={form.owner} onChange={e => setForm(f => ({...f, owner: e.target.value}))}>{OWNERS.map(o => <option key={o} value={o}>{o}</option>)}</Select></FormGroup>
+          <FormGroup label="Priority"><Select value={form.priority} onChange={e => setForm(f => ({...f, priority: e.target.value}))}>{PRIORITIES.map(p => <option key={p} value={p}>{PRIORITY_LABELS[p]}</option>)}</Select></FormGroup>
         </FormRow>
         <FormRow>
           <FormGroup label="File Size" hint="e.g. 12.4 MB or — if not yet produced"><input value={form.fileSize} onChange={e => setForm(f => ({...f, fileSize: e.target.value}))} placeholder="12.4 MB" /></FormGroup>

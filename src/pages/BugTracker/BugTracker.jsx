@@ -3,7 +3,7 @@ import { useBugStore } from '../../store';
 import { useToast } from '../../lib/toast';
 import { Badge, PRIORITY_LABELS, STATUS_LABELS } from '../../components/ui/Badge';
 import { Button } from '../../components/ui/Button';
-import { Modal, FormGroup, FormRow } from '../../components/ui/Modal';
+import { Modal, FormGroup, FormRow, Select } from '../../components/ui/Modal';
 import { Plus, Search, Bug, AlertTriangle, ChevronDown, ChevronUp, Trash2, Edit3 } from 'lucide-react';
 import styles from './BugTracker.module.css';
 
@@ -189,12 +189,12 @@ export default function BugTracker() {
       >
         <FormGroup label="Bug Title" required><input value={form.title} onChange={e => setForm(f => ({...f, title: e.target.value}))} placeholder="One-line description of the issue" autoFocus /></FormGroup>
         <FormRow>
-          <FormGroup label="Severity"><select value={form.severity} onChange={e => setForm(f => ({...f, severity: e.target.value}))}>{SEVERITIES.map(s => <option key={s} value={s}>{s.charAt(0).toUpperCase()+s.slice(1)}</option>)}</select></FormGroup>
-          <FormGroup label="Status"><select value={form.status} onChange={e => setForm(f => ({...f, status: e.target.value}))}>{STATUSES.map(s => <option key={s} value={s}>{STATUS_LABELS[s]}</option>)}</select></FormGroup>
+          <FormGroup label="Severity"><Select value={form.severity} onChange={e => setForm(f => ({...f, severity: e.target.value}))}>{SEVERITIES.map(s => <option key={s} value={s}>{s.charAt(0).toUpperCase()+s.slice(1)}</option>)}</Select></FormGroup>
+          <FormGroup label="Status"><Select value={form.status} onChange={e => setForm(f => ({...f, status: e.target.value}))}>{STATUSES.map(s => <option key={s} value={s}>{STATUS_LABELS[s]}</option>)}</Select></FormGroup>
         </FormRow>
-        <FormGroup label="Affected System"><select value={form.system} onChange={e => setForm(f => ({...f, system: e.target.value}))}>{SYSTEMS.map(s => <option key={s} value={s}>{s}</option>)}</select></FormGroup>
+        <FormGroup label="Affected System"><Select value={form.system} onChange={e => setForm(f => ({...f, system: e.target.value}))}>{SYSTEMS.map(s => <option key={s} value={s}>{s}</option>)}</Select></FormGroup>
         <FormRow>
-          <FormGroup label="Assignee"><select value={form.assignee} onChange={e => setForm(f => ({...f, assignee: e.target.value}))}>{ASSIGNEES.map(a => <option key={a} value={a}>{a}</option>)}</select></FormGroup>
+          <FormGroup label="Assignee"><Select value={form.assignee} onChange={e => setForm(f => ({...f, assignee: e.target.value}))}>{ASSIGNEES.map(a => <option key={a} value={a}>{a}</option>)}</Select></FormGroup>
           <FormGroup label="Reported By"><input value={form.reportedBy} onChange={e => setForm(f => ({...f, reportedBy: e.target.value}))} placeholder="Your name" /></FormGroup>
         </FormRow>
         <FormGroup label="Steps to Reproduce" hint="Numbered steps make it easier to reproduce"><textarea value={form.steps} onChange={e => setForm(f => ({...f, steps: e.target.value}))} placeholder={"1. Do X\n2. Do Y\n3. Observe Z"} rows={4} /></FormGroup>

@@ -3,7 +3,7 @@ import { useCharacterStore } from '../../store';
 import { useToast } from '../../lib/toast';
 import { Badge } from '../../components/ui/Badge';
 import { Button } from '../../components/ui/Button';
-import { Modal, FormGroup, FormRow } from '../../components/ui/Modal';
+import { Modal, FormGroup, FormRow, Select } from '../../components/ui/Modal';
 import { Plus, Search, Edit3, Trash2, Users, Image } from 'lucide-react';
 import styles from './Characters.module.css';
 
@@ -131,14 +131,14 @@ export default function Characters() {
       >
         <FormRow>
           <FormGroup label="Name" required><input value={form.name} onChange={e => setForm(f => ({...f, name: e.target.value}))} placeholder="Character name" autoFocus /></FormGroup>
-          <FormGroup label="Role"><select value={form.role} onChange={e => setForm(f => ({...f, role: e.target.value}))}>{ROLES.map(r => <option key={r} value={r}>{r}</option>)}</select></FormGroup>
+          <FormGroup label="Role"><Select value={form.role} onChange={e => setForm(f => ({...f, role: e.target.value}))}>{ROLES.map(r => <option key={r} value={r}>{r}</option>)}</Select></FormGroup>
         </FormRow>
         <FormRow>
-          <FormGroup label="Archetype"><select value={form.archetype} onChange={e => setForm(f => ({...f, archetype: e.target.value}))}>{ARCHETYPES.map(a => <option key={a} value={a}>{a}</option>)}</select></FormGroup>
-          <FormGroup label="Status"><select value={form.status} onChange={e => setForm(f => ({...f, status: e.target.value}))}>{STATUSES.map(s => <option key={s} value={s}>{s}</option>)}</select></FormGroup>
+          <FormGroup label="Archetype"><Select value={form.archetype} onChange={e => setForm(f => ({...f, archetype: e.target.value}))}>{ARCHETYPES.map(a => <option key={a} value={a}>{a}</option>)}</Select></FormGroup>
+          <FormGroup label="Status"><Select value={form.status} onChange={e => setForm(f => ({...f, status: e.target.value}))}>{STATUSES.map(s => <option key={s} value={s}>{s}</option>)}</Select></FormGroup>
         </FormRow>
         <FormRow>
-          <FormGroup label="Faction Affinity"><select value={form.factionAffinity} onChange={e => setForm(f => ({...f, factionAffinity: e.target.value}))}>{FACTIONS.map(fa => <option key={fa} value={fa}>{fa}</option>)}</select></FormGroup>
+          <FormGroup label="Faction Affinity"><Select value={form.factionAffinity} onChange={e => setForm(f => ({...f, factionAffinity: e.target.value}))}>{FACTIONS.map(fa => <option key={fa} value={fa}>{fa}</option>)}</Select></FormGroup>
           <FormGroup label="Accent Color">
             <div style={{display:'flex', gap:6, flexWrap:'wrap', marginTop: 8}}>
               {COLORS.map(c => <button key={c} type="button" style={{width:22, height:22, borderRadius:'50%', background:c, border: form.color === c ? '2.5px solid white' : '2.5px solid transparent', cursor:'pointer'}} onClick={() => setForm(f => ({...f, color: c}))} />)}
