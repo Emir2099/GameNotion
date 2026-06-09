@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+/* eslint-disable react/prop-types */
+import { useState } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
 import {
   LayoutDashboard, FileText, Kanban, Package, Bug,
   Globe, Users, Map, Cpu, Flag, UsersRound,
   ChevronLeft, ChevronRight, HelpCircle,
-  Gamepad2, Activity, ChevronDown, FolderPlus, FolderKanban
+  ChevronDown, FolderPlus, FolderKanban
 } from 'lucide-react';
 import { useAppStore } from '../../store';
 import styles from './Sidebar.module.css';
@@ -63,7 +64,7 @@ function ProjectSwitcher() {
       {isOpen && (
         <>
           <div className={styles.switcherBackdrop} onClick={() => setIsOpen(false)} />
-          <div className={`${styles.switcherDropdown} glass`}>
+          <div className={styles.switcherDropdown}>
             <div className={styles.switcherHeader}>Switch Project</div>
             <div className={styles.projectsList}>
               {projects.map(p => (
