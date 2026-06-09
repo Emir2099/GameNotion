@@ -72,7 +72,7 @@ function ColumnBody({ id, children, className }) {
 }
 
 export default function SprintBoard() {
-  const { tasks, addTask, updateTask, deleteTask, moveTask, sprintName, sprintGoal, sprintStart, sprintEnd, updateSprint } = useTaskStore();
+  const { tasks, addTask, updateTask, deleteTask, moveTask, reorderTasks, sprintName, sprintGoal, sprintStart, sprintEnd, updateSprint } = useTaskStore();
   const { addToast } = useToast();
 
   const [showAddModal, setShowAddModal] = useState(false);
@@ -104,18 +104,32 @@ export default function SprintBoard() {
     setActiveId(null);
     if (!over) return;
     const taskId = active.id;
-    // Detect if dropped on a column header
+    
+    // Detect if dropped on a column header or background
     const col = COLUMNS.find(c => c.id === over.id);
     if (col) {
-      moveTask(taskId, col.id);
-      addToast(`Task moved to ${col.label}`, 'success');
+      const activeTask = tasks.find(t => t.id === taskId);
+      if (activeTask && activeTask.column !== col.id) {
+        moveTask(taskId, col.id);
+        addToast(`Task moved to ${col.label}`, 'success');
+      }
       return;
     }
-    // Dropped on another card — move to that card's column
+    
+    // Dropped on another card
     const targetTask = tasks.find(t => t.id === over.id);
-    if (targetTask && targetTask.column !== tasks.find(t => t.id === taskId)?.column) {
-      moveTask(taskId, targetTask.column);
-      addToast(`Task moved to ${COLUMNS.find(c => c.id === targetTask.column)?.label}`, 'success');
+    if (targetTask) {
+      const activeTask = tasks.find(t => t.id === taskId);
+      if (activeTask) {
+        const targetColLabel = COLUMNS.find(c => c.id === targetTask.column)?.label;
+        const columnsChanged = activeTask.column !== targetTask.column;
+        
+        reorderTasks(taskId, over.id);
+        
+        if (columnsChanged) {
+          addToast(`Task moved to ${targetColLabel}`, 'success');
+        }
+      }
     }
   };
 

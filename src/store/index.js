@@ -102,6 +102,26 @@ export const useTaskStore = create(
       updateTask: (id, updates) => set((s) => ({ tasks: s.tasks.map((t) => t.id === id ? { ...t, ...updates } : t) })),
       deleteTask: (id) => set((s) => ({ tasks: s.tasks.filter((t) => t.id !== id) })),
       moveTask: (id, column) => set((s) => ({ tasks: s.tasks.map((t) => t.id === id ? { ...t, column } : t) })),
+      reorderTasks: (activeId, overId) => set((s) => {
+        const activeIndex = s.tasks.findIndex((t) => t.id === activeId);
+        const overIndex = s.tasks.findIndex((t) => t.id === overId);
+        if (activeIndex === -1 || overIndex === -1) return {};
+
+        const activeTask = s.tasks[activeIndex];
+        const overTask = s.tasks[overIndex];
+        const newTasks = [...s.tasks];
+
+        if (activeTask.column !== overTask.column) {
+          const updatedActive = { ...activeTask, column: overTask.column };
+          newTasks.splice(activeIndex, 1);
+          newTasks.splice(overIndex, 0, updatedActive);
+        } else {
+          newTasks.splice(activeIndex, 1);
+          newTasks.splice(overIndex, 0, activeTask);
+        }
+
+        return { tasks: newTasks };
+      }),
       updateSprint: (data) => set(data),
       switchProject: (fromId, toId) => set((s) => {
         if (!fromId || !toId || fromId === toId) return {};
