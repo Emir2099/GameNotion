@@ -10,7 +10,14 @@
   border-radius: var(--radius-lg); padding: 14px 16px;
   cursor: pointer; transition: all var(--duration-base) var(--ease-default);
   text-align: left;
+  opacity: 0;
+  animation: slideUpFade 0.3s var(--ease-out) forwards;
 }
+.summaryCard:nth-child(1) { animation-delay: 0.02s; }
+.summaryCard:nth-child(2) { animation-delay: 0.05s; }
+.summaryCard:nth-child(3) { animation-delay: 0.08s; }
+.summaryCard:nth-child(4) { animation-delay: 0.11s; }
+.summaryCard:nth-child(5) { animation-delay: 0.14s; }
 .summaryCard:hover { border-color: var(--border-strong); transform: translateY(-2px); }
 .summaryActive { border-color: var(--brand-500); background: var(--brand-dim); }
 .summaryNum { display: block; font-family: var(--font-cyber); font-size: 28px; font-weight: 800; color: var(--text-primary); line-height: 1; margin-bottom: 4px; letter-spacing: 0.05em; }
@@ -38,7 +45,24 @@
   background: var(--bg-card); border: 1px solid var(--border-subtle);
   border-radius: var(--radius-lg); overflow: hidden;
   transition: border-color var(--duration-base) var(--ease-default);
+  opacity: 0;
+  animation: slideUpFade 0.35s var(--ease-out) forwards;
 }
+.bugRow:nth-child(1) { animation-delay: 0.05s; }
+.bugRow:nth-child(2) { animation-delay: 0.09s; }
+.bugRow:nth-child(3) { animation-delay: 0.13s; }
+.bugRow:nth-child(4) { animation-delay: 0.17s; }
+.bugRow:nth-child(5) { animation-delay: 0.21s; }
+.bugRow:nth-child(6) { animation-delay: 0.25s; }
+.bugRow:nth-child(7) { animation-delay: 0.29s; }
+.bugRow:nth-child(8) { animation-delay: 0.33s; }
+.bugRow:nth-child(n+9) { animation-delay: 0.36s; }
+
+@keyframes slideUpFade {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
 .bugRow:hover { border-color: var(--border-default); }
 .bugRowExpanded { border-color: var(--brand-500); }
 

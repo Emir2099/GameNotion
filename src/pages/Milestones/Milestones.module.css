@@ -112,7 +112,23 @@
 
 /* Timeline */
 .timeline { display: flex; flex-direction: column; max-width: 800px; }
-.milestone { display: flex; gap: 0; }
+.milestone {
+  display: flex; gap: 0;
+  opacity: 0;
+  animation: slideUpFade 0.4s var(--ease-out) forwards;
+}
+.milestone:nth-child(1) { animation-delay: 0.04s; }
+.milestone:nth-child(2) { animation-delay: 0.08s; }
+.milestone:nth-child(3) { animation-delay: 0.12s; }
+.milestone:nth-child(4) { animation-delay: 0.16s; }
+.milestone:nth-child(5) { animation-delay: 0.20s; }
+.milestone:nth-child(6) { animation-delay: 0.24s; }
+.milestone:nth-child(n+7) { animation-delay: 0.28s; }
+
+@keyframes slideUpFade {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
 .milestoneLeft {
   display: flex; flex-direction: column; align-items: center;
   width: 48px; flex-shrink: 0;
