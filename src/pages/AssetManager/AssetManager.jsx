@@ -297,7 +297,16 @@ export default function AssetManager() {
               )}
             </div>
             <div className={styles.detailRight}>
-              <HologramViewer title={`${viewingAsset.type.toUpperCase()} VISUALIZER`} />
+              <HologramViewer
+                type={viewingAsset.type}
+                title={`${viewingAsset.type.toUpperCase()} VISUALIZER`}
+                savedData={viewingAsset.uploadedFile}
+                savedFileName={viewingAsset.uploadedFileName}
+                onSaveData={(data, fileName) => {
+                  updateAsset(viewingAsset.id, { uploadedFile: data, uploadedFileName: fileName });
+                  setViewingAsset((prev) => prev ? { ...prev, uploadedFile: data, uploadedFileName: fileName } : null);
+                }}
+              />
             </div>
           </div>
         )}

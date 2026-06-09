@@ -125,7 +125,15 @@ export default function Characters() {
               </div>
             </div>
             <div className={styles.detailRight}>
-              <HologramViewer title={`${viewing.name.toUpperCase()} 3D MODEL`} />
+              <HologramViewer
+                type="mesh"
+                title={`${viewing.name.toUpperCase()} 3D MODEL`}
+                savedData={viewing.uploadedFile}
+                savedFileName={viewing.uploadedFileName}
+                onSaveData={(data, fileName) => {
+                  updateCharacter(viewing.id, { uploadedFile: data, uploadedFileName: fileName });
+                }}
+              />
             </div>
           </div>
         )}
