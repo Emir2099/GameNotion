@@ -5,6 +5,7 @@ import { Badge } from '../../components/ui/Badge';
 import { Button } from '../../components/ui/Button';
 import { Modal, FormGroup, FormRow, Select } from '../../components/ui/Modal';
 import { Plus, Search, Edit3, Trash2, Users, Image } from 'lucide-react';
+import { HologramViewer } from '../../components/ui/HologramViewer';
 import styles from './Characters.module.css';
 
 const ROLES = ['Protagonist','Companion','Main Antagonist','Faction Leader','NPC','Minor Character'];
@@ -103,23 +104,28 @@ export default function Characters() {
         </>}
       >
         {viewing && (
-          <div>
-            <div className={styles.detailHeader}>
-              <img src={viewing.avatar || `/avatars/kael.png`} alt={viewing.name} className={styles.detailAvatarImg} style={{ borderColor: viewing.color }} />
-              <div className={styles.detailMetaInfo}>
-                <div className={styles.detailRole} style={{ color: viewing.color }}>{viewing.role} · {viewing.archetype}</div>
-                <div className={styles.detailFaction}>{viewing.factionAffinity} faction · {viewing.status}</div>
+          <div className={styles.detailGrid}>
+            <div className={styles.detailLeft}>
+              <div className={styles.detailHeader}>
+                <img src={viewing.avatar || `/avatars/kael.png`} alt={viewing.name} className={styles.detailAvatarImg} style={{ borderColor: viewing.color }} />
+                <div className={styles.detailMetaInfo}>
+                  <div className={styles.detailRole} style={{ color: viewing.color }}>{viewing.role} · {viewing.archetype}</div>
+                  <div className={styles.detailFaction}>{viewing.factionAffinity} faction · {viewing.status}</div>
+                </div>
+              </div>
+              {viewing.description && <><strong className={styles.detailSec}>Description</strong><p className={styles.detailText}>{viewing.description}</p></>}
+              {viewing.personality && <><strong className={styles.detailSec}>Personality</strong><p className={styles.detailText}>{viewing.personality}</p></>}
+              {viewing.abilities?.length > 0 && (
+                <><strong className={styles.detailSec}>Abilities</strong>
+                <div className={styles.abilitiesList}>{(Array.isArray(viewing.abilities) ? viewing.abilities : viewing.abilities?.split(',')).map(a => <span key={a} className={styles.abilityTag}>{a.trim()}</span>)}</div></>
+              )}
+              <div className={styles.detailMeta}>
+                <span><strong>Voice:</strong> {viewing.voiceActor}</span>
+                <span><strong>Model:</strong> {viewing.model}</span>
               </div>
             </div>
-            {viewing.description && <><strong className={styles.detailSec}>Description</strong><p className={styles.detailText}>{viewing.description}</p></>}
-            {viewing.personality && <><strong className={styles.detailSec}>Personality</strong><p className={styles.detailText}>{viewing.personality}</p></>}
-            {viewing.abilities?.length > 0 && (
-              <><strong className={styles.detailSec}>Abilities</strong>
-              <div className={styles.abilitiesList}>{(Array.isArray(viewing.abilities) ? viewing.abilities : viewing.abilities?.split(',')).map(a => <span key={a} className={styles.abilityTag}>{a.trim()}</span>)}</div></>
-            )}
-            <div className={styles.detailMeta}>
-              <span><strong>Voice:</strong> {viewing.voiceActor}</span>
-              <span><strong>Model:</strong> {viewing.model}</span>
+            <div className={styles.detailRight}>
+              <HologramViewer title={`${viewing.name.toUpperCase()} 3D MODEL`} />
             </div>
           </div>
         )}

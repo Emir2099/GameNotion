@@ -186,3 +186,33 @@
   outline: none; transition: border-color var(--duration-base) var(--ease-default);
 }
 .input:focus { border-color: var(--border-focus); }
+
+/* Detail Grid Layout */
+.detailGrid {
+  display: grid;
+  grid-template-columns: 1fr 1.2fr;
+  gap: 24px;
+  min-height: 340px;
+  align-items: start;
+}
+.detailLeft {
+  display: flex;
+  flex-direction: column;
+  align-content: start;
+}
+.detailRight {
+  display: flex;
+  flex-direction: column;
+  min-height: 340px;
+}
+
+@media (max-width: 768px) {
+  .detailGrid {
+    grid-template-columns: 1fr;
+  }
+  .detailRight {
+    min-height: 300px;
+    border-top: 1px solid var(--border-subtle);
+    padding-top: 16px;
+  }
+}
